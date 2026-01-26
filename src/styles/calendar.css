@@ -1,0 +1,18 @@
+/* Quitar círculo violeta default */
+.rdp-day[aria-selected="true"]::before {
+    display: none !important;
+  }
+  
+  /* Día seleccionado limpio y verde */
+  .rdp-day[aria-selected="true"] {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    border-radius: 50%;
+  }
+
+  /* === DayPicker reset === */
+.rdp {
+    --rdp-accent-color: #dc2626; /* rojo Tailwind */
+    --rdp-background-color: transparent;
+  }
+  
