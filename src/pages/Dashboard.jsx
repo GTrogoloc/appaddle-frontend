@@ -46,6 +46,7 @@ function Dashboard() {
   const [fechaFiltro, setFechaFiltro] = useState(new Date());
   const [mostrarCalendarioFiltro, setMostrarCalendarioFiltro] = useState(false);
   const [mostrarCanceladas, setMostrarCanceladas] = useState(false);
+  const [tooltipHora, setTooltipHora] = useState(null);
 
   const hoy = new Date();
   const anioActual = hoy.getFullYear();
@@ -189,6 +190,32 @@ const listaDias = Array.from(
       );
     });
   }
+
+  /////HORARIO FINALIZADO
+  function turnoFinalizado(hora) {
+    if (!diaActivo) return false;
+  
+    const ahora = new Date();
+  
+    // solo bloquear si el día activo es HOY
+    const esHoy =
+      diaActivo.getDate() === ahora.getDate() &&
+      diaActivo.getMonth() === ahora.getMonth() &&
+      diaActivo.getFullYear() === ahora.getFullYear();
+  
+    if (!esHoy) return false;
+  
+    const [h, m] = hora.split(":").map(Number);
+  
+    const inicioTurno = new Date(diaActivo);
+    inicioTurno.setHours(h, m, 0, 0);
+  
+    const finTurno = new Date(inicioTurno);
+    finTurno.setMinutes(finTurno.getMinutes() + DURACION_TURNO_MINUTOS);
+  
+    return ahora >= finTurno; // 🔴 SOLO si ya terminó
+  }
+
  
   ////////// ESTADO DE TURNOS
   function obtenerEstadoTurno(reserva, proximoTurno) {
@@ -542,47 +569,100 @@ const listaDias = Array.from(
       ));
   }
 
-  // ======================
-  // HORARIOS
-  // ======================
-  function renderHorarios(cancha) {
-    if (!diaActivo) return null;
+// ======================
+// HORARIOS
+// ======================
+function renderHorarios(cancha) {
+  if (!diaActivo) return null;
 
-    const diaKey = keyDia(diaActivo);
-    const seleccionados = selecciones[diaKey]?.[cancha] || [];
+  const diaKey = keyDia(diaActivo);
+  const seleccionados = selecciones[diaKey]?.[cancha] || [];
 
-    return (
-      <div className="flex flex-wrap gap-2 justify-start">
-        {HORARIOS.map((hora) => {
-          const ocupado = estaOcupado(cancha, hora);
-          const seleccionado = seleccionados.includes(hora);
+  return (
+    <div className="flex flex-wrap gap-2 justify-start">
+      {HORARIOS.map((hora) => {
+        const ocupado = estaOcupado(cancha, hora);
+        const finalizado = turnoFinalizado(hora);
+        const seleccionado = seleccionados.includes(hora);
 
-          return (
+        return (
+          <div
+            key={hora}
+            style={{ position: "relative", display: "inline-block" }}
+            onMouseEnter={() => {
+              if (ocupado) {
+                setTooltipHora(`${hora}-reservado`);
+              } else if (finalizado) {
+                setTooltipHora(`${hora}-finalizado`);
+              } else {
+                setTooltipHora(`${hora}-disponible`);
+              }
+            }}
+            onMouseLeave={() => setTooltipHora(null)}
+          >
             <button
-              key={hora}
-              disabled={ocupado}
               onClick={() => toggleHorario(cancha, hora)}
               style={{
                 padding: "7px 12px",
                 borderRadius: "2px",
                 border: "none",
-                cursor: ocupado ? "not-allowed" : "pointer",
+
+                cursor: ocupado || finalizado ? "not-allowed" : "pointer",
+                pointerEvents: ocupado || finalizado ? "none" : "auto",
+
                 background: ocupado
-                  ? "#8f8f8f"
-                  : seleccionado
-                    ? "#FF9800"
-                    : "#4CAF50",
-                color: ocupado ? "#222" : "white",
-                opacity: ocupado ? 0.9 : 1,
+                  ? "#d32f2f"        // 🔴 reservado
+                  : finalizado
+                    ? "#8f8f8f"      // ⚫ pasado
+                    : seleccionado
+                      ? "#FF9800"    // 🟧 seleccionado
+                      : "#4CAF50",   // 🟢 disponible
+
+                color: ocupado
+                  ? "#fff"
+                  : finalizado
+                    ? "#000"
+                    : "#fff",
               }}
             >
               {hora}
             </button>
-          );
-        })}
-      </div>
-    );
-  }
+
+            {/* TOOLTIP CONTROLADO POR ESTADO */}
+            {
+              tooltipHora ===
+                `${hora}-${ocupado ? "reservado" : finalizado ? "finalizado" : "disponible"}` && (
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: "-22px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    background: "#333",
+                    color: "#fff",
+                    fontSize: "10px",
+                    padding: "2px 6px",
+                    borderRadius: "4px",
+                    whiteSpace: "nowrap",
+                    pointerEvents: "none",
+                    zIndex: 10,
+                  }}
+                >
+                    {ocupado
+    ? "Reservado"
+    : finalizado
+      ? "Horario finalizado"
+      : "Disponible"}
+                </span>
+              )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+      
+  
 
   // ======================
   // JSX
