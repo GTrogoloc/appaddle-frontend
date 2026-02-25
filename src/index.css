@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* VARIABLE GLOBAL HEADER */
+:root {
+  --color-header: #7a1f2b;
+}
+:root {
+  --color-header: #7a1f2b;
+  --color-header-texto: #ffffff;
+}
+
 /*bordes de datos de formulario nombre,apellido,telefono*/
 input:focus-visible {
     border-color: blue !important;
