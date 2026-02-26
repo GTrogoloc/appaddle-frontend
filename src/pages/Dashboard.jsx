@@ -256,6 +256,7 @@ const listaDias = Array.from(
 <EstadisticasModal
   mostrarEstadisticas={mostrarEstadisticas}
   setMostrarEstadisticas={setMostrarEstadisticas}
+  reservas={reservas}
 />
 
 
