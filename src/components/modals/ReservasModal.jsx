@@ -247,14 +247,16 @@ function ReservasModal({
                     </a>
                   </div>
                   <div className="flex justify-end pr-6">
-                    <button
-                      type="button"
-                      onClick={() => eliminarReserva(r.id)}
-                      className="px-3 py-1.5 text-xs bg-red-600 text-white rounded"
-                    >
-                      ¿Eliminar?
-                    </button>
-                  </div>
+  {estado !== "FINALIZADA" && (
+    <button
+      type="button"
+      onClick={() => eliminarReserva(r.id)}
+      className="px-3 py-1.5 text-xs bg-red-600 text-white rounded"
+    >
+      ¿Eliminar?
+    </button>
+  )}
+</div>
                 </div>
               );
             })}

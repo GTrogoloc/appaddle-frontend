@@ -8,6 +8,7 @@ import { useEstadoTurnos } from "../hooks/useEstadoTurnos";
 import { useClienteReserva } from "../hooks/useClienteReserva";
 import FechasHorarios from "../components/reserva/FechasHorarios";
 import PanelCalendario from "../components/reserva/PanelCalendario";
+import EstadisticasModal from "../components/modals/EstadisticasModal";
 
 const HORARIOS = [
   "08:00", "09:30", "11:00", "12:30",
@@ -36,6 +37,7 @@ function Dashboard() {
   const { reservas, setReservas, eliminarReserva, confirmarReserva, DURACION_TURNO_MINUTOS} = useReservas();
   const { estaOcupado, turnoFinalizado, obtenerEstadoTurno} = useEstadoTurnos({reservas,diaActivo, DURACION_TURNO_MINUTOS});
   const { cliente, setCliente, sugerencias, handleClienteChange, limpiarCliente } = useClienteReserva(reservas);
+  const [mostrarEstadisticas, setMostrarEstadisticas] = useState(false);
 
   const hoy = new Date();
   const anioActual = hoy.getFullYear();
@@ -251,6 +253,11 @@ const listaDias = Array.from(
   formatearFecha={formatearFecha}
 />
 
+<EstadisticasModal
+  mostrarEstadisticas={mostrarEstadisticas}
+  setMostrarEstadisticas={setMostrarEstadisticas}
+/>
+
 
       {/* ======================
         CONTENEDOR PRINCIPAL
@@ -283,6 +290,7 @@ const listaDias = Array.from(
 <PanelCalendario
   setDiasSeleccionados={setDiasSeleccionados}
   setMostrarReservas={setMostrarReservas}
+  setMostrarEstadisticas={setMostrarEstadisticas}
 />
 
 

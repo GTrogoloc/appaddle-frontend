@@ -3,6 +3,7 @@ import Calendar from "../Calendar";
 function PanelCalendario({
   setDiasSeleccionados,
   setMostrarReservas,
+  setMostrarEstadisticas,
 }) {
   return (
     <div className="dashboard-left">
@@ -24,11 +25,21 @@ function PanelCalendario({
         <div className="mt-4">
           <button
             onClick={() => setMostrarReservas(true)}
-            className="w-full px-4 py-2 text-sm bg-[#7a1f2b] text-white rounded shadow"
+            className="w-full px-4 py-2 text-sm bg-[#7a1f2b] hover:bg-[#5e1821] text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
-            Ver reservas
+           📅 Ver reservas
           </button>
         </div>
+
+        {/* BOTÓN ESTADÍSTICAS */}
+<div className="mt-2">
+  <button
+    onClick={() => setMostrarEstadisticas(true)}
+    className="w-full px-4 py-2 text-sm bg-blue-700 hover:bg-blue-800 text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
+  >
+    📊 Estadísticas
+  </button>
+</div>
 
       </div>
     </div>
