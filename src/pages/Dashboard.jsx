@@ -16,10 +16,7 @@ const HORARIOS = [
   "20:00", "21:30", "23:00"
 ];
 
-const CANCHAS_MAP = {
-  "Cancha 1": 1,
-  "Cancha 2": 2,
-};
+
 
 function Dashboard() {
   // ======================
@@ -38,6 +35,10 @@ function Dashboard() {
   const { estaOcupado, turnoFinalizado, obtenerEstadoTurno} = useEstadoTurnos({reservas,diaActivo, DURACION_TURNO_MINUTOS});
   const { cliente, setCliente, sugerencias, handleClienteChange, limpiarCliente } = useClienteReserva(reservas);
   const [mostrarEstadisticas, setMostrarEstadisticas] = useState(false);
+  const [canchas, setCanchas] = useState([]);
+  const CANCHAS_MAP = Object.fromEntries(
+    canchas.map((c) => [c.nombre, c.id])
+  );
 
   const hoy = new Date();
   const anioActual = hoy.getFullYear();
@@ -127,6 +128,37 @@ const listaDias = Array.from(
     setFiltroMes(fechaFiltro.getMonth() + 1);
     setFiltroAnio(fechaFiltro.getFullYear());
   }, [fechaFiltro]);
+
+  useEffect(() => {
+    async function cargarCanchas() {
+      try {
+        console.log("🚀 Intentando traer canchas...");
+  
+        const res = await fetch("http://localhost:8080/canchas");
+  
+        console.log("📡 Respuesta fetch:", res);
+  
+        if (!res.ok) {
+          throw new Error("Error en la respuesta del servidor");
+        }
+  
+        const data = await res.json();
+  
+        console.log("✅ Data recibida:", data);
+  
+        setCanchas(data);
+  
+      } catch (error) {
+        console.error("🔥 ERROR FETCH CANCHAS:", error);
+      }
+    }
+  
+    cargarCanchas();
+  }, []);
+
+  useEffect(() => {
+    console.log("Canchas cargadas:", canchas);
+  }, [canchas]);
 
 
   // ======================
@@ -224,7 +256,8 @@ const listaDias = Array.from(
   // JSX
   // ======================
   return (
-    <>
+    <div className="h-screen flex flex-col pt-12">
+
       <Header />
 
       <ReservasModal
@@ -263,25 +296,22 @@ const listaDias = Array.from(
       {/* ======================
         CONTENEDOR PRINCIPAL
        ====================== */}
-      <div
-        className="min-h-screen pt-[calc(env(safe-area-inset-top)+48px)] md:pt-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:pb-20"
-        style={{
-          height: "calc(100vh - 40px)",
-          backgroundImage: `
+<div
+className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 px-6"
+  style={{
+    backgroundImage: `
       linear-gradient(
         rgba(245,245,245,0.1),
         rgba(245,245,245,0.2)
       ),
       url('/Padel-Tennis-Hub-10.jpg')
     `,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "top center",
-          backgroundColor: "#f5f5f5",
-          
-        }}
-        
-      >
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "top center",
+    backgroundColor: "#f5f5f5",
+  }}
+>
 
  {/*====================== MARCA DE AGUA ======================*/}
 <div className="fixed bottom-4 right-4 bg-black/80 text-white text-xs px-4 py-1.5 rounded-full shadow-lg font-semibold tracking-wide hover:bg-black transition-colors duration-200">
@@ -294,8 +324,8 @@ const listaDias = Array.from(
   setMostrarEstadisticas={setMostrarEstadisticas}
 />
 
-
-        <FechasHorarios
+<div className="flex flex-col flex-1 min-h-0">
+<FechasHorarios
   diasSeleccionados={diasSeleccionados}
   diaActivo={diaActivo}
   setDiaActivo={setDiaActivo}
@@ -312,10 +342,11 @@ const listaDias = Array.from(
   setCliente={setCliente}
   handleConfirmarReserva={handleConfirmarReserva}
   eliminarHorario={eliminarHorario}
+  canchas={canchas}
 />
-
+</div>
       </div>
-    </>
+    </div>
   );
 }
 export default Dashboard;

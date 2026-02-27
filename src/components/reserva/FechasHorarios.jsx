@@ -19,22 +19,25 @@ function FechasHorarios({
   setCliente,
   handleConfirmarReserva,
   eliminarHorario,
+  canchas
 }) {
   if (diasSeleccionados.length === 0) return null;
 
   return (
-    <div className="dashboard-right flex flex-col mt-4 items-start w-full">
-
+    <div className="flex flex-col h-full min-h-0">
+  
       {/* TITULO */}
-      <div className="w-full mb-4 flex justify-center md:justify-start">
+      <div className="w-full mt-4 mb-3 flex justify-center md:justify-start">
         <span className="inline-block bg-[#7a1f2b] text-white px-20 py-1 rounded-md text-sm font-semibold">
           FECHAS Y HORARIOS
         </span>
       </div>
-
-      {/* BOTONES DE FECHA */}
-      <div className="w-full">
-        <div className="flex flex-wrap gap-2 justify-start">
+  
+      {/* CONTENIDO */}
+      <div className="flex flex-col flex-1 min-h-0">
+  
+        {/* BOTONES DE FECHA */}
+        <div className="flex flex-wrap gap-2 mb-3">
           {diasSeleccionados.map((dia) => (
             <button
               key={dia.getTime()}
@@ -59,52 +62,53 @@ function FechasHorarios({
             </button>
           ))}
         </div>
-
+  
         {diaActivo && (
           <>
-            {/* CANCHA 1 */}
-            <div className="mt-3 w-full bg-white/70 p-2 rounded-md shadow-sm">
-              <h4 className="mb-4 font-semibold text-black">Cancha 1</h4>
-              <HorariosCancha
-                cancha="Cancha 1"
-                HORARIOS={HORARIOS}
-                diaActivo={diaActivo}
+            {/* SCROLL SOLO PARA CANCHAS */}
+            <div
+  className="overflow-y-auto pr-2"
+  style={{ maxHeight: "220px" }}
+>
+  
+              {canchas.map((cancha) => (
+                <div
+                  key={cancha.id}
+                  className="mb-3 bg-white/70 p-2 rounded-md shadow-sm"
+                >
+                  <h4 className="mb-3 font-semibold text-black">
+                    {cancha.nombre}
+                  </h4>
+  
+                  <HorariosCancha
+                    cancha={cancha.nombre}
+                    HORARIOS={HORARIOS}
+                    diaActivo={diaActivo}
+                    selecciones={selecciones}
+                    toggleHorario={toggleHorario}
+                    estaOcupado={estaOcupado}
+                    turnoFinalizado={turnoFinalizado}
+                    tooltipHora={tooltipHora}
+                    setTooltipHora={setTooltipHora}
+                    keyDia={keyDia}
+                  />
+                </div>
+              ))}
+  
+            </div>
+  
+            {/* RESUMEN FIJO ABAJO */}
+            <div className="mt-3 shrink-0">
+              <ResumenReserva
                 selecciones={selecciones}
-                toggleHorario={toggleHorario}
-                estaOcupado={estaOcupado}
-                turnoFinalizado={turnoFinalizado}
-                tooltipHora={tooltipHora}
-                setTooltipHora={setTooltipHora}
-                keyDia={keyDia}
+                eliminarHorario={eliminarHorario}
+                cliente={cliente}
+                sugerencias={sugerencias}
+                handleClienteChange={handleClienteChange}
+                setCliente={setCliente}
+                handleConfirmarReserva={handleConfirmarReserva}
               />
             </div>
-
-            {/* CANCHA 2 */}
-            <div className="mt-3 w-full bg-white/70 p-2 rounded-md shadow-sm">
-              <h4 className="mb-4 font-semibold text-black">Cancha 2</h4>
-              <HorariosCancha
-                cancha="Cancha 2"
-                HORARIOS={HORARIOS}
-                diaActivo={diaActivo}
-                selecciones={selecciones}
-                toggleHorario={toggleHorario}
-                estaOcupado={estaOcupado}
-                turnoFinalizado={turnoFinalizado}
-                tooltipHora={tooltipHora}
-                setTooltipHora={setTooltipHora}
-                keyDia={keyDia}
-              />
-            </div>
-        
-<ResumenReserva
-  selecciones={selecciones}
-  eliminarHorario={eliminarHorario}
-  cliente={cliente}
-  sugerencias={sugerencias}
-  handleClienteChange={handleClienteChange}
-  setCliente={setCliente}
-  handleConfirmarReserva={handleConfirmarReserva}
-/>
           </>
         )}
       </div>

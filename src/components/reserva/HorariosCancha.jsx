@@ -16,7 +16,7 @@ function HorariosCancha({
     const seleccionados = selecciones[diaKey]?.[cancha] || [];
   
     return (
-      <div className="flex flex-wrap gap-2 justify-start">
+      <div className="grid grid-cols-11 gap-2">
         {HORARIOS.map((hora) => {
           const finalizado = turnoFinalizado(hora);
           const ocupado = estaOcupado(cancha, hora);
@@ -25,7 +25,7 @@ function HorariosCancha({
           return (
             <div
               key={hora}
-              style={{ position: "relative", display: "inline-block" }}
+              className="relative"
               onMouseEnter={() => setTooltipHora(hora)}
               onMouseLeave={() => setTooltipHora(null)}
             >
@@ -35,10 +35,11 @@ function HorariosCancha({
     toggleHorario(cancha, hora);
   }}
   style={{
-    padding: "7px 12px",
+    padding: "5px 11px",
+    minWidth: "50px",
     borderRadius: "2px",
     border: "none",
-    cursor: "pointer", // 👈 ACA ESTA EL CAMBIO
+    cursor: "pointer", 
     background: ocupado
       ? "#d32f2f"
       : finalizado
@@ -60,7 +61,7 @@ function HorariosCancha({
   <span
     style={{
       position: "absolute",
-      bottom: "-22px",
+      top: "-28px",
       left: "50%",
       transform: "translateX(-50%)",
       background: "#333",
