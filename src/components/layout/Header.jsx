@@ -6,7 +6,7 @@ import ConfigModal from "./ConfigModal";
 
 const COLOR_TEXTO_DEFAULT = "#ffffff";
 
-function Header() {
+function Header({cargarCanchas, canchas}) {
   const navigate = useNavigate();
   const [nombreClub, setNombreClub] = useState("Molino Pádel");
   const [mostrarConfig, setMostrarConfig] = useState(false);
@@ -96,11 +96,13 @@ function Header() {
   </div>
 </header>
   
-      {mostrarConfig && (
-        <ConfigModal
-          nombreClub={nombreClub}
-          setNombreClub={setNombreClub}
-          cerrar={() => setMostrarConfig(false)}
+{mostrarConfig && (
+  <ConfigModal
+    nombreClub={nombreClub}
+    setNombreClub={setNombreClub}
+    cerrar={() => setMostrarConfig(false)}
+    cargarCanchas={cargarCanchas}
+    canchas={canchas}
         />
       )}
     </>

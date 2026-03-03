@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const COLOR_DEFAULT = "#7a1f2b";
 const COLOR_TEXTO_DEFAULT = "#ffffff";
 const NOMBRE_DEFAULT = "TURNERO PADEL - PCG Developer";
 
-function ConfigModal({ nombreClub, setNombreClub, cerrar }) {
+
+function ConfigModal({ nombreClub, setNombreClub, cerrar, cargarCanchas, canchas }) {
   const [nuevoNombre, setNuevoNombre] = useState(nombreClub);
+  const [nuevaCancha, setNuevaCancha] = useState("");
 
   function guardar() {
     if (!nuevoNombre.trim()) return;
@@ -36,17 +38,59 @@ function ConfigModal({ nombreClub, setNombreClub, cerrar }) {
     localStorage.removeItem("colorHeaderTexto");
   }
 
+  async function agregarCancha() {
+    if (!nuevaCancha.trim()) return;
+  
+    try {
+      await fetch("http://localhost:8080/canchas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre: nuevaCancha })
+      });
+  
+      await cargarCanchas(); // 🔥 actualiza Dashboard
+      setNuevaCancha("");
+  
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function eliminarCancha(id) {
+    if (!window.confirm("¿Seguro que querés desactivar esta cancha?"))
+      return;
+  
+    try {
+      await fetch(`http://localhost:8080/canchas/${id}`, {
+        method: "DELETE"
+      });
+  
+      await cargarCanchas(); // 🔥 sincroniza todo
+  
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-80 shadow-lg">
+      <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
+     
 
         <h2 className="text-lg font-semibold mb-4">
           Configuración
         </h2>
+       
+       {/* BLOQUE DE APARIENCIA */}
+        <div className="bg-gray-50 border rounded-lg p-4 mb-6">
+
+<h3 className="text-sm font-semibold mb-3 text-gray-700">
+🎨 Configurar Apariencia 
+</h3>
 
         {/* NOMBRE */}
         <label className="text-sm block mb-1">
-          Nombre del club
+          Nombre del club:
         </label>
 
         <input
@@ -57,54 +101,58 @@ function ConfigModal({ nombreClub, setNombreClub, cerrar }) {
         />
 
         {/* COLOR FONDO HEADER */}
-        <label className="text-sm block mb-1">
-          Color barra de navegación
-        </label>
+        <div className="flex items-center justify-between mb-4">
+  <label className="text-sm">
+    Color barra de navegación:
+  </label>
 
-        <input
-          type="color"
-          defaultValue={
-            localStorage.getItem("colorHeader") || COLOR_DEFAULT
-          }
-          onChange={(e) => {
-            const nuevoColor = e.target.value;
+  <input
+    type="color"
+    defaultValue={
+      localStorage.getItem("colorHeader") || COLOR_DEFAULT
+    }
+    onChange={(e) => {
+      const nuevoColor = e.target.value;
 
-            document.documentElement.style.setProperty(
-              "--color-header",
-              nuevoColor
-            );
+      document.documentElement.style.setProperty(
+        "--color-header",
+        nuevoColor
+      );
 
-            localStorage.setItem("colorHeader", nuevoColor);
-          }}
-          className="w-full h-10 mb-4 cursor-pointer"
-        />
+      localStorage.setItem("colorHeader", nuevoColor);
+    }}
+    className="w-8 h-6 cursor-pointer border border-gray-300 rounded"
+  />
+</div>
 
         {/* COLOR TEXTO HEADER */}
-        <label className="text-sm block mb-1">
-          Color del texto e iconos de navegación
-        </label>
+        <div className="flex items-center justify-between mb-4">
+  <label className="text-sm">
+    Color del texto e iconos:
+  </label>
 
-        <input
-          type="color"
-          defaultValue={
-            localStorage.getItem("colorHeaderTexto") ||
-            COLOR_TEXTO_DEFAULT
-          }
-          onChange={(e) => {
-            const nuevoColorTexto = e.target.value;
+  <input
+    type="color"
+    defaultValue={
+      localStorage.getItem("colorHeaderTexto") ||
+      COLOR_TEXTO_DEFAULT
+    }
+    onChange={(e) => {
+      const nuevoColorTexto = e.target.value;
 
-            document.documentElement.style.setProperty(
-              "--color-header-texto",
-              nuevoColorTexto
-            );
+      document.documentElement.style.setProperty(
+        "--color-header-texto",
+        nuevoColorTexto
+      );
 
-            localStorage.setItem(
-              "colorHeaderTexto",
-              nuevoColorTexto
-            );
-          }}
-          className="w-full h-10 mb-4 cursor-pointer"
-        />
+      localStorage.setItem(
+        "colorHeaderTexto",
+        nuevoColorTexto
+      );
+    }}
+    className="w-8 h-6 cursor-pointer border border-gray-300 rounded"
+  />
+</div>
 
         {/* RESTAURAR */}
         <button
@@ -113,6 +161,59 @@ function ConfigModal({ nombreClub, setNombreClub, cerrar }) {
         >
           Restaurar valores por defecto
         </button>
+        </div>
+
+        {/* BLOQUE GESTIÓN DE CANCHAS */}
+<div className="bg-gray-50 border rounded-lg p-4 mb-4">
+
+<h3 className="text-sm font-semibold mb-3 text-gray-700">
+🎾 Gestión de Canchas (Agregar o Eliminar)
+</h3>
+
+<div className="flex gap-2">
+
+  
+  <input
+    type="text"
+    value={nuevaCancha}
+    onChange={(e) => setNuevaCancha(e.target.value)}
+    placeholder="Nombre nueva cancha"
+    className="flex-1 border rounded px-2 py-1"
+  />
+
+  <button
+    onClick={agregarCancha}
+    className="bg-green-600 text-white px-3 rounded"
+  >
+    +
+  </button>
+</div>
+  {/* LISTA */}
+  <div className="mt-4 max-h-36 overflow-y-auto text-sm border-t pt-3">
+  {canchas.length === 0 && (
+    <p className="text-gray-500 text-xs">
+      No hay canchas registradas
+    </p>
+  )}
+
+  {canchas.map((c) => (
+    <div
+      key={c.id}
+      className="flex justify-between items-center mb-2"
+    >
+      <span>{c.nombre}</span>
+
+      <button
+        onClick={() => eliminarCancha(c.id)}
+        className="text-red-600 hover:text-red-800"
+      >
+        ❌
+      </button>
+    </div>
+  ))}
+</div>
+</div>
+
 
         {/* BOTONES */}
         <div className="flex justify-end gap-2">
@@ -132,6 +233,7 @@ function ConfigModal({ nombreClub, setNombreClub, cerrar }) {
         </div>
 
       </div>
+      
     </div>
   );
 }

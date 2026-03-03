@@ -129,36 +129,22 @@ const listaDias = Array.from(
     setFiltroAnio(fechaFiltro.getFullYear());
   }, [fechaFiltro]);
 
-  useEffect(() => {
-    async function cargarCanchas() {
-      try {
-        console.log("🚀 Intentando traer canchas...");
-  
-        const res = await fetch("http://localhost:8080/canchas");
-  
-        console.log("📡 Respuesta fetch:", res);
-  
-        if (!res.ok) {
-          throw new Error("Error en la respuesta del servidor");
-        }
-  
-        const data = await res.json();
-  
-        console.log("✅ Data recibida:", data);
-  
-        setCanchas(data);
-  
-      } catch (error) {
-        console.error("🔥 ERROR FETCH CANCHAS:", error);
-      }
-    }
-  
-    cargarCanchas();
-  }, []);
 
-  useEffect(() => {
-    console.log("Canchas cargadas:", canchas);
-  }, [canchas]);
+async function cargarCanchas() {
+  try {
+    const res = await fetch("http://localhost:8080/canchas");
+    if (!res.ok) throw new Error("Error servidor");
+
+    const data = await res.json();
+    setCanchas(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+useEffect(() => {
+  cargarCanchas();
+}, []);
 
 
   // ======================
@@ -258,7 +244,9 @@ const listaDias = Array.from(
   return (
     <div className="h-screen flex flex-col pt-12">
 
-      <Header />
+      <Header cargarCanchas={cargarCanchas}
+       canchas={canchas}
+       />
 
       <ReservasModal
   mostrarReservas={mostrarReservas}
