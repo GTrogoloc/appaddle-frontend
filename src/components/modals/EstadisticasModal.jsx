@@ -124,6 +124,94 @@ const obtenerNuevosClientes = () => {
 
 const nuevosClientes = obtenerNuevosClientes();
 
+const HORARIOS = [
+  "08:00","09:30","11:00","12:30",
+  "14:00","15:30","17:00","18:30",
+  "20:00","21:30","23:00"
+];
+
+const ahora = new Date();
+const hoy = ahora.toISOString().split("T")[0];
+
+const mesActual = ahora.getMonth();
+const anioActual = ahora.getFullYear();
+
+const mesAnterior = mesActual === 0 ? 11 : mesActual - 1;
+const anioMesAnterior = mesActual === 0 ? anioActual - 1 : anioActual;
+
+// reservas válidas
+const reservasValidas = reservas.filter(r => r.estado !== "CANCELADA");
+
+// 📊 RESERVAS HOY
+const reservasHoy = reservasValidas.filter(r =>
+  r.fechaHoraInicio.startsWith(hoy)
+);
+
+// 📅 MES ACTUAL
+const reservasMesActual = reservasValidas.filter(r => {
+  const fecha = new Date(r.fechaHoraInicio);
+  return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
+});
+
+// 📅 MES ANTERIOR
+const reservasMesAnterior = reservasValidas.filter(r => {
+  const fecha = new Date(r.fechaHoraInicio);
+  return fecha.getMonth() === mesAnterior && fecha.getFullYear() === anioMesAnterior;
+});
+
+// 🔥 HORARIOS MES ANTERIOR
+const contadorHoras = {};
+
+HORARIOS.forEach(h => contadorHoras[h] = 0);
+
+reservasMesAnterior.forEach(r => {
+  const hora = r.fechaHoraInicio.substring(11,16);
+  if (contadorHoras[hora] !== undefined) {
+    contadorHoras[hora]++;
+  }
+});
+
+let horaMasFuerte = null;
+let horaMasFloja = null;
+
+if (Object.keys(contadorHoras).length > 0) {
+  horaMasFuerte = Object.entries(contadorHoras)
+    .sort((a,b) => b[1]-a[1])[0][0];
+
+  horaMasFloja = Object.entries(contadorHoras)
+    .sort((a,b) => a[1]-b[1])[0][0];
+}
+
+// 💡 SUGERENCIA PROMO
+const sugerenciaPromo = horaMasFloja;
+
+// capacidad diaria
+const canchasActivas = new Set(reservasValidas.map(r => r.cancha?.nombre)).size || 1;
+
+const turnosPorDia = HORARIOS.length * canchasActivas;
+
+// ocupacion hoy
+const ocupacionHoy = Math.round((reservasHoy.length / turnosPorDia) * 100);
+const bloques = 20;
+const llenos = Math.round((ocupacionHoy / 100) * bloques);
+const vacios = bloques - llenos;
+
+const barraOcupacionHoy =
+  "█".repeat(llenos) + "░".repeat(vacios);
+
+
+// ocupacion mes actual
+const diasMesActual = new Date(anioActual, mesActual + 1, 0).getDate();
+const capacidadMesActual = diasMesActual * turnosPorDia;
+
+const ocupacionMesActual = Math.round((reservasMesActual.length / capacidadMesActual) * 100);
+
+// ocupacion mes anterior
+const diasMesAnterior = new Date(anioMesAnterior, mesAnterior + 1, 0).getDate();
+const capacidadMesAnterior = diasMesAnterior * turnosPorDia;
+
+const ocupacionMesAnterior = Math.round((reservasMesAnterior.length / capacidadMesAnterior) * 100);
+
 
 
 
@@ -430,14 +518,73 @@ const nuevosClientes = obtenerNuevosClientes();
 
 
 
-          {seccionActiva === "ocupacion" && (
-            <div>
-              <h4 className="font-semibold mb-3">Sección Ocupación</h4>
-              <p className="text-gray-500">
-                Aquí mostraremos porcentaje mensual y horarios fuertes.
-              </p>
-            </div>
-          )}
+{seccionActiva === "ocupacion" && (
+
+<div className="space-y-3 text-sm">
+
+  {/* HOY */}
+  <div className="bg-gray-50 p-3 rounded-md border">
+  <h4 className="font-semibold mb-1">📅 Hoy</h4>
+  <p>
+Reservas:
+<span className="font-semibold ml-1">{reservasHoy.length}</span>
+</p>
+<p className="flex items-center gap-2">
+Ocupación:
+
+<span className="font-mono text-sm">
+{barraOcupacionHoy}
+</span>
+
+<span className="font-semibold">
+{ocupacionHoy}%
+</span>
+
+</p>
+  </div>
+
+  {/* MES ACTUAL */}
+  <div className="bg-gray-50 p-4 rounded-md border">
+  <h4 className="font-semibold mb-1">📅 Mes actual</h4>
+    <p>
+Reservas:
+<span className="font-semibold ml-1">{reservasMesActual.length}</span>
+</p>
+    <p>
+Ocupación: 
+<span className="font-semibold ml-1">{ocupacionMesActual}%</span>
+</p>
+  </div>
+
+  {/* MES ANTERIOR */}
+  <div className="bg-gray-50 p-4 rounded-md border">
+  <h4 className="font-semibold mb-1">📅 Mes anterior</h4>
+  <p>
+Reservas:
+<span className="font-semibold ml-1">{reservasMesAnterior.length}</span>
+</p>
+    <p>
+Ocupación: 
+<span className="font-semibold ml-1">{ocupacionMesAnterior}%</span>
+</p>
+  </div>
+
+  {/* HORARIOS */}
+  <div className="bg-gray-50 p-4 rounded-md border">
+  <h4 className="font-semibold mb-1">Ocupación de Horarios:</h4>
+
+    <p>🔥 Hora más fuerte del mes pasado: <strong>{horaMasFuerte || "-"}</strong></p>
+
+    <p>📉 Hora más floja del mes pasado: <strong>{horaMasFloja || "-"}</strong></p>
+
+    <p className="text-green-600 font-semibold">
+      💡 Sugerencia promoción → {sugerenciaPromo || "-"}
+    </p>
+  </div>
+
+</div>
+
+)}
 
           {seccionActiva === "ingresos" && (
             <div>

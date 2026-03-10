@@ -41,6 +41,16 @@ function PanelCalendario({
   </button>
 </div>
 
+{/* BOTÓN TORNEOS (DESACTIVADO VISUALMENTE) */}
+<div className="mt-2">
+  <button
+    className="w-full px-4 py-2 text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2 cursor-not-allowed"
+    title="Disponible próximamente"
+  >
+    🏆 Torneos            🔒
+  </button>
+</div>
+
       </div>
     </div>
   );

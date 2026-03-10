@@ -1,4 +1,5 @@
 import Calendar from "../Calendar";
+import { useState,useEffect } from "react";
 
 function ReservasModal({
   mostrarReservas,
@@ -9,6 +10,7 @@ function ReservasModal({
   eliminarReserva,
   obtenerEstadoTurno,
   prioridadEstado,
+  proximosTurnos,
   fechaFiltro,
   setFechaFiltro,
   mostrarCalendarioFiltro,
@@ -18,6 +20,17 @@ function ReservasModal({
   filtroMes,
   filtroAnio
 }) {
+
+const [ahora, setAhora] = useState(new Date());
+
+useEffect(() => {
+  const intervalo = setInterval(() => {
+    setAhora(new Date());
+  }, 60000);
+
+  return () => clearInterval(intervalo);
+}, []);
+
   if (!mostrarReservas) return null;
 
   return (
@@ -27,6 +40,7 @@ function ReservasModal({
 
         {/* HEADER */}
         <div className="flex justify-between items-center mb-3">
+          
           <h3 className="font-semibold text-lg">Reservas</h3>
           <button
             onClick={() => setMostrarReservas(false)}
@@ -35,6 +49,45 @@ function ReservasModal({
             ✕
           </button>
         </div>
+
+{/* PROXIMOS TURNOS */}
+<div className="mb-3 px-3 py-1.5 rounded-md bg-gray-50 border border-gray-200 text-xs text-gray-600 flex items-center gap-3">
+
+  <span className="font-medium text-gray-600">
+    ⏱️ Próximos turnos:
+  </span>
+
+  {proximosTurnos?.length === 0 && (
+    <span className="italic text-gray-400">
+      sin turnos próximos
+    </span>
+  )}
+
+    {proximosTurnos?.map((r, index) => {
+
+      const inicio = new Date(r.fechaHoraInicio);
+
+      const minutosTotales = Math.max(0, Math.floor((inicio - ahora) / 60000));
+      const esUrgente = minutosTotales <= 20;
+      const horas = Math.floor(minutosTotales / 60);
+      const minutos = minutosTotales % 60;
+
+const tiempo =
+  horas > 0
+    ? `${horas}h ${minutos}min`
+    : minutos === 0 ? "ahora" : `${minutos}min`;
+
+    return (
+<span key={r.id} className="flex items-center gap-1">
+{index !== 0 && <span className="mx-1">•</span>}
+   {r.cancha.nombre} en {tiempo}
+   {esUrgente && <span className="ml-1 animate-pulse">🔴</span>}
+</span>
+      );
+    })}
+
+  </div>
+
 
         {/* FILTROS */}
         <div className="flex gap-4 pb-3 mb-3 border-b">
@@ -154,20 +207,30 @@ function ReservasModal({
               if (r.estado === "CANCELADA") return false;
 
               const fecha = new Date(r.fechaHoraInicio);
-
+            
               const coincideFecha =
                 fecha.getDate() === diaFiltro &&
                 fecha.getMonth() + 1 === filtroMes &&
                 fecha.getFullYear() === filtroAnio;
-
+            
               const texto = busqueda.toLowerCase();
-
+            
               const coincideBusqueda =
                 r.nombre.toLowerCase().includes(texto) ||
                 r.apellido.toLowerCase().includes(texto) ||
                 r.telefono.includes(texto);
+            
+              // 🔎 Si hay búsqueda → mostrar reservas HOY o FUTURAS del cliente
+              if (busqueda !== "") {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+            
+                return coincideBusqueda && fecha >= hoy;
+              }
+            
+              // 📅 Si no hay búsqueda → mostrar solo el día seleccionado
+              return coincideFecha;
 
-              return coincideFecha && (busqueda === "" || coincideBusqueda);
             })
             .sort((a, b) => {
               const estadoA = obtenerEstadoTurno(a);

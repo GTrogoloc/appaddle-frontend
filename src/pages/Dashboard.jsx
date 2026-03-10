@@ -32,7 +32,7 @@ function Dashboard() {
   const [mostrarCanceladas, setMostrarCanceladas] = useState(false);
   const [tooltipHora, setTooltipHora] = useState(null);
   const { reservas, setReservas, eliminarReserva, confirmarReserva, DURACION_TURNO_MINUTOS} = useReservas();
-  const { estaOcupado, turnoFinalizado, obtenerEstadoTurno} = useEstadoTurnos({reservas,diaActivo, DURACION_TURNO_MINUTOS});
+  const { estaOcupado, turnoFinalizado, obtenerEstadoTurno,proximosTurnos} = useEstadoTurnos({reservas,diaActivo, DURACION_TURNO_MINUTOS});
   const { cliente, setCliente, sugerencias, handleClienteChange, limpiarCliente } = useClienteReserva(reservas);
   const [mostrarEstadisticas, setMostrarEstadisticas] = useState(false);
   const [canchas, setCanchas] = useState([]);
@@ -248,7 +248,7 @@ useEffect(() => {
        canchas={canchas}
        />
 
-      <ReservasModal
+  <ReservasModal
   mostrarReservas={mostrarReservas}
   setMostrarReservas={setMostrarReservas}
   reservas={reservas}
@@ -257,6 +257,7 @@ useEffect(() => {
   eliminarReserva={eliminarReserva}
   obtenerEstadoTurno={obtenerEstadoTurno}
   prioridadEstado={prioridadEstado}
+  proximosTurnos={proximosTurnos}
   fechaFiltro={fechaFiltro}
   setFechaFiltro={setFechaFiltro}
   mostrarCalendarioFiltro={mostrarCalendarioFiltro}
