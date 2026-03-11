@@ -3,6 +3,7 @@ import { logout } from "../../services/authService";
 import { LogOut, HelpCircle, Settings } from "lucide-react";
 import { useState, useEffect } from "react";
 import ConfigModal from "./ConfigModal";
+import AyudaModal from "./AyudaModal";
 
 const COLOR_TEXTO_DEFAULT = "#ffffff";
 
@@ -10,6 +11,7 @@ function Header({cargarCanchas, canchas}) {
   const navigate = useNavigate();
   const [nombreClub, setNombreClub] = useState("Molino Pádel");
   const [mostrarConfig, setMostrarConfig] = useState(false);
+  const [mostrarAyuda, setMostrarAyuda] = useState(false);
 
   useEffect(() => {
     const guardado = localStorage.getItem("nombreClub");
@@ -31,6 +33,7 @@ function Header({cargarCanchas, canchas}) {
       );
     }
   }, []);
+
 
   function cerrarSesion() {
     const confirmar = window.confirm("¿Seguro desea cerrar sesión?");
@@ -78,11 +81,12 @@ function Header({cargarCanchas, canchas}) {
       </button>
 
       <button
-        className="p-2 rounded-md hover:bg-white/10 transition"
-        title="Ayuda"
-      >
-        <HelpCircle size={18} style={{ color: "var(--color-header-texto)" }} />
-      </button>
+  onClick={() => setMostrarAyuda(true)}
+  className="p-2 rounded-md hover:bg-white/10 transition"
+  title="Ayuda"
+>
+  <HelpCircle size={18} style={{ color: "var(--color-header-texto)" }} />
+</button>
 
       <button
         onClick={cerrarSesion}
@@ -105,6 +109,13 @@ function Header({cargarCanchas, canchas}) {
     canchas={canchas}
         />
       )}
+
+{mostrarAyuda && (
+  <AyudaModal
+    mostrarAyuda={mostrarAyuda}
+    setMostrarAyuda={setMostrarAyuda}
+  />
+)}
     </>
   );
 }
