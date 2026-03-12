@@ -218,6 +218,107 @@ useEffect(() => {
 
       return nuevasSelecciones;
     });
+
+  }
+  // ======================
+// WHATSAPP CONFIRMACION
+// ======================
+function enviarConfirmacionWhatsApp(cliente, selecciones) {
+
+  const emojiPelota = "🎾";
+  const emojiCalendario = "📅";
+  const emojiReloj = "⏰";
+  const emojiPin = "📍";
+  const emojiManos = "🙌";
+  
+  let mensaje = `${emojiPelota} Club Padel PCG
+  
+  Hola ${cliente.nombre} 👋
+  
+  Tu reserva fue confirmada con éxito.
+  
+  `;
+  
+  Object.entries(selecciones).forEach(([fecha, canchas]) => {
+  
+    Object.entries(canchas).forEach(([cancha, horarios]) => {
+  
+      horarios.forEach((hora) => {
+  
+        const fechaObj = new Date(fecha + "T00:00:00");
+
+        const dia = fechaObj.toLocaleDateString("es-AR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        });
+  
+        mensaje += `${emojiCalendario} ${dia}\n`;
+        mensaje += `${emojiReloj} ${hora} hs\n`;
+        mensaje += `${emojiPelota} ${cancha}\n`;
+        mensaje += `⏳ Duración: ${DURACION_TURNO_MINUTOS} minutos\n\n`;
+  
+      });
+  
+    });
+  
+  });
+  
+  mensaje += `${emojiPin} Cómo llegar: https://maps.google.com/
+  
+  Te esperamos ${emojiManos}`;
+
+const mensajeCodificado = encodeURIComponent(mensaje);
+
+const telefono = cliente.telefono.replace(/\D/g, "");
+const url = `https://api.whatsapp.com/send?phone=54${telefono}&text=${mensajeCodificado}`;
+
+window.open(url, "whatsapp");
+}
+
+  // ======================
+// WHATSAPP CANCELACION
+// ======================
+function enviarCancelacionWhatsApp(reserva) {
+
+  const emojiPelota = "🎾";
+  const emojiCalendario = "📅";
+  const emojiReloj = "⏰";
+  const emojiMano = "👋";
+  
+  const fechaObj = new Date(reserva.fechaHoraInicio);
+
+  const dia = fechaObj.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  });
+  
+  const hora = fechaObj.toLocaleTimeString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+  
+  let mensaje = `Hola ${reserva.nombre} ${emojiMano}
+  
+  Tu reserva fue cancelada.
+  
+  ${emojiCalendario} ${dia}
+  ${emojiReloj} ${hora} hs
+  ${emojiPelota} ${reserva.cancha?.nombre}
+  
+  Si querés reservar otro horario podés hacerlo nuevamente.
+  
+  ${emojiPelota} Club Padel PCG`;
+  
+  const mensajeCodificado = encodeURIComponent(mensaje);
+  
+  const telefono = reserva.telefono.replace(/\D/g, "");
+  
+  const url = `https://api.whatsapp.com/send?phone=54${telefono}&text=${mensajeCodificado}`;
+  
+  window.open(url, "whatsapp");
   }
 
   //funcion Confirmar reserva
@@ -229,6 +330,8 @@ useEffect(() => {
     });
   
     if (!ok) return;
+
+    enviarConfirmacionWhatsApp(cliente, selecciones);
   
     alert("✅ Reserva creada correctamente");
   
@@ -255,6 +358,7 @@ useEffect(() => {
   busqueda={busqueda}
   setBusqueda={setBusqueda}
   eliminarReserva={eliminarReserva}
+  enviarCancelacionWhatsApp={enviarCancelacionWhatsApp}
   obtenerEstadoTurno={obtenerEstadoTurno}
   prioridadEstado={prioridadEstado}
   proximosTurnos={proximosTurnos}

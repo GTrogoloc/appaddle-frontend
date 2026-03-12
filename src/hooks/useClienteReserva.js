@@ -30,7 +30,9 @@ export function useClienteReserva(reservas) {
 
     const mapa = new Map();
 
-    filtrados.forEach((r) => {
+    filtrados
+    .sort((a, b) => b.id - a.id)
+    .forEach((r) => {
       const key = `${r.nombre.toLowerCase()}-${r.apellido.toLowerCase()}`;
 
       if (!mapa.has(key)) {

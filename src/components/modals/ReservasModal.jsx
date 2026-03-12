@@ -8,6 +8,7 @@ function ReservasModal({
   busqueda,
   setBusqueda,
   eliminarReserva,
+  enviarCancelacionWhatsApp,
   obtenerEstadoTurno,
   prioridadEstado,
   proximosTurnos,
@@ -313,7 +314,8 @@ const tiempo =
   {estado !== "FINALIZADA" && (
     <button
       type="button"
-      onClick={() => eliminarReserva(r.id)}
+      onClick={() => {eliminarReserva(r.id);
+      enviarCancelacionWhatsApp(r);}}
       className="px-3 py-1.5 text-xs bg-red-600 text-white rounded"
     >
       ¿Eliminar?

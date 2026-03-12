@@ -213,8 +213,6 @@ const capacidadMesAnterior = diasMesAnterior * turnosPorDia;
 const ocupacionMesAnterior = Math.round((reservasMesAnterior.length / capacidadMesAnterior) * 100);
 
 
-
-
   if (!mostrarEstadisticas) return null;
 
   return (
@@ -232,14 +230,17 @@ const ocupacionMesAnterior = Math.round((reservasMesAnterior.length / capacidadM
           </button>
         </div>
 
+                {/* CONTENIDO DINÁMICO */}
+                <div className="flex-1 overflow-y-auto ">
+
         {/* TABS PRINCIPALES */}
-        <div className="flex gap-3 mb-6 border-b pb-4">
+        <div className="flex gap-3 mb-6 border-b pb-4 sticky top-0 bg-white z-30">
 
         <button
   onClick={() => setSeccionActiva("clientes")}
   className={`px-4 py-2 rounded-md text-sm transition ${
     seccionActiva === "clientes"
-      ? "bg-blue-500/20 text-blue-700 border border-blue-400/40 font-semibold"
+    ? "bg-blue-500/20 text-blue-700 border border-blue-400/40 font-semibold"
       : "bg-gray-200 text-gray-700 hover:bg-gray-300"
   }`}
 >
@@ -269,16 +270,13 @@ const ocupacionMesAnterior = Math.round((reservasMesAnterior.length / capacidadM
 >
   💰 Ingresos
 </button>
-
 </div>
 
-        {/* CONTENIDO DINÁMICO */}
-        <div className="flex-1 overflow-y-auto">
-        {seccionActiva === "clientes" && (
-  <div>
 
+  {seccionActiva === "clientes" && (
+ <div>
     {/* SUB-OPCIONES */}
-    <div className="flex gap-3 mb-6">
+    <div className="flex gap-3 mb-6 sticky top-14 bg-white z-20 pb-2">
 
 <button
   onClick={() => setSubSeccionClientes("activos")}
@@ -321,11 +319,11 @@ const ocupacionMesAnterior = Math.round((reservasMesAnterior.length / capacidadM
 {/* 🏆 CLIENTES ACTIVOS */}
 {subSeccionClientes === "activos" && (
   <>
-    <h4 className="font-semibold text-lg mb-2">
+    <h4 className="font-semibold text-lg mb-1">
       🏆 Clientes Más Activos (Últimos 3 meses)
     </h4>
 
-    <p className="text-gray-600 text-sm">
+    <p className="text-gray-600 text-sm ">
       Basado en cantidad total de reservas confirmadas.
     </p>
 
