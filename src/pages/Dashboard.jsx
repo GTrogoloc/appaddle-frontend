@@ -355,6 +355,7 @@ function enviarCancelacionWhatsApp(reserva) {
   mostrarReservas={mostrarReservas}
   setMostrarReservas={setMostrarReservas}
   reservas={reservas}
+  setReservas={setReservas}
   busqueda={busqueda}
   setBusqueda={setBusqueda}
   eliminarReserva={eliminarReserva}

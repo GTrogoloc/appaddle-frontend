@@ -5,6 +5,7 @@ function ReservasModal({
   mostrarReservas,
   setMostrarReservas,
   reservas,
+  setReservas,
   busqueda,
   setBusqueda,
   eliminarReserva,
@@ -31,6 +32,52 @@ useEffect(() => {
 
   return () => clearInterval(intervalo);
 }, []);
+
+//marca DE Seña
+async function marcarSenia(reserva) {
+  const confirmar = window.confirm(
+    `¿Registrar la SEÑA del turno de ${reserva.nombre} ${reserva.apellido}?`
+  );
+  if (!confirmar) return;
+
+  await fetch(`http://localhost:8080/reservas/${reserva.id}/senia`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  setReservas(prev =>
+    prev.map(r =>
+      r.id === reserva.id
+        ? { ...r, estadoPago: "SENIA_PAGADA" }
+        : r
+    )
+  );
+}
+
+//MARCA DE PAGO
+async function marcarPago(reserva) {
+  const confirmar = window.confirm(
+    `¿Registrar el PAGO COMPLETO del turno de ${reserva.nombre} ${reserva.apellido}?`
+  );
+  if (!confirmar) return;
+
+  await fetch(`http://localhost:8080/reservas/${reserva.id}/pagar`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  setReservas(prev =>
+    prev.map(r =>
+      r.id === reserva.id
+        ? { ...r, estadoPago: "PAGADO" }
+        : r
+    )
+  );
+}
 
   if (!mostrarReservas) return null;
 
@@ -178,7 +225,7 @@ const tiempo =
         </div>
 
         {/* COLUMNAS */}
-        <div className="grid grid-cols-6 gap-2 text-xs font-semibold border-b pb-2 mb-2">
+        <div className="grid grid-cols-7 gap-2 text-xs font-semibold border-b pb-2 mb-2">
           <div className="flex items-center gap-1">
             👤 <span>Cliente</span>
           </div>
@@ -194,9 +241,12 @@ const tiempo =
           <div className="flex items-center gap-1">
             ☎️<span>Teléfono</span>
           </div>
+          <div className="flex items-center gap-1">
+          💰<span>Pagos</span>
+          </div>
 
           <div className="flex items-center justify-start pl-3 gap-1">
-            🗑️ <span>Eliminar</span>
+            🗑️ <span>Eliminar/Cancelar</span>
           </div>
         </div>
 
@@ -252,7 +302,7 @@ const tiempo =
               return (
                 <div
                   key={r.id}
-                  className={`grid grid-cols-6 gap-2 items-center text-sm border-b py-2
+                  className={`grid grid-cols-7 gap-2 items-center text-sm border-b py-2
     ${estado === "EN_JUEGO" ? "bg-green-100" : ""}
     ${estado === "PROXIMO" ? "bg-yellow-100" : ""}
     ${estado === "RESERVADA" ? "bg-gray-50" : ""}
@@ -310,6 +360,47 @@ const tiempo =
                       {r.telefono}
                     </a>
                   </div>
+
+
+                  <div className="flex items-center gap-1 text-xs">
+
+{r.estadoPago === "PENDIENTE" && (
+  <>
+    <span className="flex items-center gap-1 text-yellow-600">
+  <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+  Pendiente
+</span>
+    <button
+      onClick={() => marcarSenia(r)}
+      className="text-xs bg-yellow-500 text-white px-2 py-1 rounded"
+    >
+      Señar
+    </button>
+  </>
+)}
+
+{r.estadoPago === "SENIA_PAGADA" && (
+  <>
+    <span className="flex items-center gap-1 text-orange-600">
+  <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+  Seña</span>
+    <button
+      onClick={() => marcarPago(r)}
+      className="text-xs bg-orange-500 text-white px-2 py-1 rounded"
+    >
+      Pagar
+    </button>
+  </>
+)}
+
+{r.estadoPago === "PAGADO" && (
+  <span className="flex items-center gap-1 text-green-600">
+  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+  Pagado</span>
+)}
+
+</div>
+
                   <div className="flex justify-end pr-6">
   {estado !== "FINALIZADA" && (
     <button
