@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 
-export function useEstadoTurnos({ reservas, diaActivo, DURACION_TURNO_MINUTOS }) {
-
+export function useEstadoTurnos({
+  reservas,
+  diaActivo,
+  DURACION_TURNO_MINUTOS,
+}) {
   const ahora = new Date();
 
   // ======================
@@ -13,10 +16,7 @@ export function useEstadoTurnos({ reservas, diaActivo, DURACION_TURNO_MINUTOS })
         if (r.estado === "CANCELADA") return false;
         return new Date(r.fechaHoraInicio) > ahora;
       })
-      .sort(
-        (a, b) =>
-          new Date(a.fechaHoraInicio) - new Date(b.fechaHoraInicio)
-      )
+      .sort((a, b) => new Date(a.fechaHoraInicio) - new Date(b.fechaHoraInicio))
       .slice(0, 2);
   }, [reservas]);
 
@@ -76,6 +76,10 @@ export function useEstadoTurnos({ reservas, diaActivo, DURACION_TURNO_MINUTOS })
   // ESTADO TURNO
   // ======================
   function obtenerEstadoTurno(reserva) {
+    if (reserva.estado === "CANCELADA") {
+      return "CANCELADA";
+    }
+
     const ahora = new Date();
 
     const inicio = new Date(reserva.fechaHoraInicio);
@@ -90,9 +94,7 @@ export function useEstadoTurnos({ reservas, diaActivo, DURACION_TURNO_MINUTOS })
       return "FINALIZADA";
     }
 
-    const esProximo = proximosTurnos.some(
-      (r) => r.id === reserva.id
-    );
+    const esProximo = proximosTurnos.some((r) => r.id === reserva.id);
 
     if (esProximo) {
       return "PROXIMO";
@@ -105,6 +107,6 @@ export function useEstadoTurnos({ reservas, diaActivo, DURACION_TURNO_MINUTOS })
     proximosTurnos,
     estaOcupado,
     turnoFinalizado,
-    obtenerEstadoTurno
+    obtenerEstadoTurno,
   };
 }

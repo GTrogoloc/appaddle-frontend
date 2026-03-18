@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { obtenerReservas, crearReserva, cancelarReserva } from "../services/reservaService";
+import {
+  obtenerReservas,
+  crearReserva,
+  cancelarReserva,
+} from "../services/reservaService";
 
 export function useReservas() {
-
   const [reservas, setReservas] = useState([]);
   const DURACION_TURNO_MINUTOS = 90;
 
@@ -27,47 +30,45 @@ export function useReservas() {
   // ELIMINAR / CANCELAR
   // ======================
   async function eliminarReserva(reservaId) {
-    const confirmar = window.confirm(
-      "¿Seguro querés eliminar/cancelar esta reserva?"
-    );
-    if (!confirmar) return;
+    const confirmar = window.confirm("¿Seguro querés cancelar?");
+    if (!confirmar) return false;
 
     try {
       const token = localStorage.getItem("token");
 
       await cancelarReserva(reservaId, token);
 
+      // 🔥 volver a traer TODO (incluye canceladas)
       const data = await obtenerReservas(token);
       setReservas(data);
 
-      alert("✅ Reserva cancelada/eliminada correctamente!");
+      return true;
     } catch (error) {
       console.error(error);
-      alert("❌ Error al cancelar/eliminar la reserva");
+      return false;
     }
   }
 
-// ======================
-// CONFIRMAR RESERVA
-// ======================
-async function confirmarReserva({ cliente, selecciones, CANCHAS_MAP }) {
+  // ======================
+  // CONFIRMAR RESERVA
+  // ======================
+  async function confirmarReserva({ cliente, selecciones, CANCHAS_MAP }) {
     try {
       const token = localStorage.getItem("token");
-  
+
       if (!token) {
         alert("No estás autenticado");
         return false;
       }
-  
+
       if (!cliente.nombre || !cliente.apellido || !cliente.telefono) {
         alert("Todos los campos del cliente son obligatorios");
         return false;
       }
-  
+
       for (const [fecha, canchas] of Object.entries(selecciones)) {
         for (const [canchaNombre, horarios] of Object.entries(canchas)) {
           for (const hora of horarios) {
-  
             const payload = {
               fechaHoraInicio: `${fecha}T${hora}`,
               nombre: cliente.nombre,
@@ -76,18 +77,17 @@ async function confirmarReserva({ cliente, selecciones, CANCHAS_MAP }) {
               canchaId: CANCHAS_MAP[canchaNombre],
               administradorId: 1,
             };
-  
+
             await crearReserva(payload, token);
           }
         }
       }
-  
+
       // refrescar reservas
       const data = await obtenerReservas(token);
       setReservas(data);
-  
+
       return true;
-  
     } catch (error) {
       console.error(error);
       alert("❌ Error al crear la reserva");
@@ -95,13 +95,11 @@ async function confirmarReserva({ cliente, selecciones, CANCHAS_MAP }) {
     }
   }
 
-
-
   return {
     reservas,
     setReservas,
     eliminarReserva,
     confirmarReserva,
-    DURACION_TURNO_MINUTOS
+    DURACION_TURNO_MINUTOS,
   };
 }
