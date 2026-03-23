@@ -209,6 +209,13 @@ function EstadisticasModal({
     return total;
   }, 0);
 
+  //DEUDORES EN DINERO PENDIENTE
+  const deudores = reservasValidas.filter(
+    (r) =>
+      r.estadoPago && // 🔥 clave: solo reservas con pagos definidos
+      r.estadoPago !== "PAGADO"
+  );
+
   // DINERO PENDIENTE (lo que me deben)
   const ingresosPendientes = reservasValidas.reduce((total, r) => {
     if (r.estadoPago === "PENDIENTE") {
@@ -254,7 +261,6 @@ function EstadisticasModal({
   }, 0);
 
   // 💸 INGRESOS DE CANCELADAS
-
   const calcularIngresosCanceladas = (lista) => {
     return lista.reduce((total, r) => {
       if (r.estado !== "CANCELADA") return total;
@@ -747,6 +753,15 @@ function EstadisticasModal({
                     <> 👥 {turnosConSenia} clientes con seña</>
                   )}
                 </p>
+                {/**boton VER DEUDORES**/}
+                {deudores.length > 0 && (
+                  <button
+                    onClick={() => setSeccionActiva("deudores")}
+                    className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-xs"
+                  >
+                    Ver deudores ({deudores.length})
+                  </button>
+                )}
               </div>
 
               {/* HOY */}
@@ -758,7 +773,6 @@ function EstadisticasModal({
                     ${new Intl.NumberFormat("es-AR").format(ingresosHoy)}
                   </span>
                 </p>
-
                 {ingresosCanceladasHoy > 0 && (
                   <p className="text-xs text-red-600 mt-1">
                     💸 De cancelaciones: $
@@ -812,6 +826,50 @@ function EstadisticasModal({
                   </p>
                 )}
               </div>
+            </div>
+          )}
+          {seccionActiva === "deudores" && (
+            <div className="space-y-2 text-sm">
+              {/* BOTÓN VOLVER */}
+              <button
+                onClick={() => setSeccionActiva("ingresos")}
+                className="mb-2 px-3 py-1 bg-gray-400 text-white rounded text-xs"
+              >
+                ← Volver atras
+              </button>
+              <h4 className="font-semibold mb-2">💸 Deudores</h4>
+
+              {deudores.length === 0 ? (
+                <p className="text-gray-500 text-xs">No hay deudas</p>
+              ) : (
+                deudores.map((r) => {
+                  const fecha = new Date(r.fechaHoraInicio);
+                  const dia = fecha.toLocaleDateString("es-AR");
+
+                  return (
+                    <div
+                      key={r.id}
+                      className="flex justify-between border-b pb-1"
+                    >
+                      <span>
+                        {dia} - {r.nombre} {r.apellido}
+                      </span>
+
+                      <span
+                        className={`text-xs font-semibold ${
+                          r.estadoPago === "PENDIENTE"
+                            ? "text-red-600"
+                            : "text-orange-600"
+                        }`}
+                      >
+                        {r.estadoPago === "PENDIENTE"
+                          ? "Debe completo"
+                          : "Señó (falta pagar)"}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
             </div>
           )}
         </div>
