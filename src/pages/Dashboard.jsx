@@ -382,6 +382,7 @@ function Dashboard() {
         mostrarEstadisticas={mostrarEstadisticas}
         setMostrarEstadisticas={setMostrarEstadisticas}
         reservas={reservas}
+        setReservas={setReservas}
       />
 
       {/* ======================

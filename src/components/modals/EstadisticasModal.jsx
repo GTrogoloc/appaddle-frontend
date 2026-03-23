@@ -4,6 +4,7 @@ function EstadisticasModal({
   mostrarEstadisticas,
   setMostrarEstadisticas,
   reservas,
+  setReservas,
 }) {
   const [seccionActiva, setSeccionActiva] = useState("clientes");
   const [subSeccionClientes, setSubSeccionClientes] = useState("activos");
@@ -229,6 +230,49 @@ function EstadisticasModal({
 
     return total;
   }, 0);
+
+  // MARCAR COMO PAGADO EN DEUDORES
+  const marcarComoPagado = async (id) => {
+    const confirmar = window.confirm(
+      "¿Seguro que querés marcar este turno como pagado?"
+    );
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://localhost:8080/reservas/${id}/pagar`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Error en PUT pagar");
+        return;
+      }
+
+      const res = await fetch("http://localhost:8080/reservas", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        console.error("Error al traer reservas");
+        return;
+      }
+
+      const json = await res.json();
+
+      setReservas(json.data);
+    } catch (error) {
+      console.error("ERROR TOTAL:", error);
+    }
+  };
 
   // 🔢 CONTADORES DE PAGOS
   const turnosPendientes = reservasValidas.filter(
@@ -849,26 +893,71 @@ function EstadisticasModal({
                     const fecha = new Date(r.fechaHoraInicio);
                     const dia = fecha.toLocaleDateString("es-AR");
 
+                    // calcular deuda
+                    const montoDebe =
+                      r.estadoPago === "PENDIENTE"
+                        ? r.precioTotal || 0
+                        : (r.precioTotal || 0) - (r.seniaTotal || 0);
+
+                    // mensaje de WhatsApp
+                    const mensaje = `Hola ${r.nombre} 👋
+Te recordamos que tenés pendiente una deuda del día ${dia} por $${montoDebe}.
+
+Podés cancelarlo enviando el pago a nuestro alias:
+TU_ALIAS`;
+
                     return (
                       <div
                         key={r.id}
-                        className="flex justify-between border-b pb-1"
+                        className="flex items-center justify-between border-b pb-2"
                       >
+                        {/* IZQUIERDA */}
                         <span>
                           {dia} - {r.nombre} {r.apellido}
                         </span>
 
-                        <span
-                          className={`text-xs font-semibold ${
-                            r.estadoPago === "PENDIENTE"
-                              ? "text-red-600"
-                              : "text-orange-600"
-                          }`}
-                        >
-                          {r.estadoPago === "PENDIENTE"
-                            ? "Debe completo"
-                            : "Señó (falta pagar)"}
-                        </span>
+                        {/* DERECHA */}
+                        <div className="flex items-center gap-2">
+                          {/* 📲 WHATSAPP */}
+                          <a
+                            href={`https://wa.me/54${
+                              r.telefono
+                            }?text=${encodeURIComponent(mensaje)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center w-7 h-7 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-sm"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="w-4 h-4"
+                            >
+                              <path d="M20.52 3.48A11.94 11.94 0 0012.03 0C5.41 0 .03 5.38.03 12c0 2.11.55 4.16 1.6 5.97L0 24l6.22-1.63A11.96 11.96 0 0012.03 24c6.62 0 12-5.38 12-12 0-3.2-1.25-6.21-3.51-8.52zM12.03 21.82a9.78 9.78 0 01-4.98-1.37l-.36-.21-3.69.97.98-3.6-.23-.37A9.78 9.78 0 012.22 12c0-5.42 4.39-9.81 9.81-9.81 2.62 0 5.09 1.02 6.94 2.87a9.75 9.75 0 012.87 6.94c0 5.42-4.39 9.82-9.81 9.82zm5.39-7.32c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.47-.89-.8-1.49-1.79-1.66-2.09-.17-.3-.02-.46.13-.61.14-.14.30-.35.45-.52.15-.17.20-.30.3-.5.10-.20.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.67-.5-.17 0-.37-.02-.57-.02-.20 0-.52.07-.80.37-.27.30-1.05 1.02-1.05 2.49s1.07 2.90 1.22 3.10c.15.20 2.10 3.20 5.09 4.49.71.31 1.27.49 1.70.63.71.23 1.35.20 1.86.12.57-.08 1.77-.72 2.02-1.41.25-.69.25-1.28.17-1.41-.08-.12-.27-.20-.57-.35z" />
+                            </svg>
+                          </a>
+
+                          {/* ESTADO */}
+                          <span
+                            className={`text-xs font-semibold ${
+                              r.estadoPago === "PENDIENTE"
+                                ? "text-red-600"
+                                : "text-orange-600"
+                            }`}
+                          >
+                            {r.estadoPago === "PENDIENTE"
+                              ? "Debe completo"
+                              : "Señó (falta pagar)"}
+                          </span>
+
+                          {/* ✔ PAGAR */}
+                          <button
+                            onClick={() => marcarComoPagado(r.id)}
+                            className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs"
+                          >
+                            ✔ Pagar
+                          </button>
+                        </div>
                       </div>
                     );
                   })
