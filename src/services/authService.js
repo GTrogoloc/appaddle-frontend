@@ -21,10 +21,7 @@ export async function login(usuario, contraseña) {
 
   // 🔐 Guardamos sesión
   localStorage.setItem("token", data.data.token);
-  localStorage.setItem(
-    "admin",
-    JSON.stringify(data.data.administrador)
-  );
+  localStorage.setItem("admin", JSON.stringify(data.data.administrador));
 
   return data;
 }

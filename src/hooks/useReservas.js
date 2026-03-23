@@ -30,15 +30,11 @@ export function useReservas() {
   // ELIMINAR / CANCELAR
   // ======================
   async function eliminarReserva(reservaId) {
-    const confirmar = window.confirm("¿Seguro querés cancelar?");
-    if (!confirmar) return false;
-
     try {
       const token = localStorage.getItem("token");
 
       await cancelarReserva(reservaId, token);
 
-      // 🔥 volver a traer TODO (incluye canceladas)
       const data = await obtenerReservas(token);
       setReservas(data);
 

@@ -41,12 +41,15 @@ export async function crearReserva(reserva, token) {
 
 // CANCELAR RESERVA (NO BORRAR)
 export async function cancelarReserva(id, token) {
-  const response = await fetch(`http://localhost:8080/reservas/${id}/cancelar`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await fetch(
+    `http://localhost:8080/reservas/${id}/cancelar`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!response.ok) {
     const error = await response.text();

@@ -1,11 +1,10 @@
 import { useState } from "react";
 
 export function useClienteReserva(reservas) {
-
   const [cliente, setCliente] = useState({
     nombre: "",
     apellido: "",
-    telefono: ""
+    telefono: "",
   });
 
   const [sugerencias, setSugerencias] = useState([]);
@@ -31,19 +30,19 @@ export function useClienteReserva(reservas) {
     const mapa = new Map();
 
     filtrados
-    .sort((a, b) => b.id - a.id)
-    .forEach((r) => {
-      const key = `${r.nombre.toLowerCase()}-${r.apellido.toLowerCase()}`;
+      .sort((a, b) => b.id - a.id)
+      .forEach((r) => {
+        const key = `${r.nombre.toLowerCase()}-${r.apellido.toLowerCase()}`;
 
-      if (!mapa.has(key)) {
-        mapa.set(key, {
-          id: r.id,
-          nombre: r.nombre,
-          apellido: r.apellido,
-          telefono: r.telefono,
-        });
-      }
-    });
+        if (!mapa.has(key)) {
+          mapa.set(key, {
+            id: r.id,
+            nombre: r.nombre,
+            apellido: r.apellido,
+            telefono: r.telefono,
+          });
+        }
+      });
 
     return Array.from(mapa.values());
   }
@@ -92,6 +91,6 @@ export function useClienteReserva(reservas) {
     setCliente,
     sugerencias,
     handleClienteChange,
-    limpiarCliente
+    limpiarCliente,
   };
 }

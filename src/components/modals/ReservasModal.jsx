@@ -21,6 +21,8 @@ function ReservasModal({
   diaFiltro,
   filtroMes,
   filtroAnio,
+  setReservaAEliminar,
+  setPagoPendiente,
 }) {
   const [ahora, setAhora] = useState(new Date());
   const [hoverPagoId, setHoverPagoId] = useState(null);
@@ -55,7 +57,9 @@ function ReservasModal({
     });
   }
 
-  //marca DE Seña
+  //PAGOSSSSSSSSSSS
+
+  //MARCA DE SEÑA
   async function marcarSenia(reserva) {
     const confirmar = window.confirm(
       `¿Registrar la SEÑA del turno de ${reserva.nombre} ${reserva.apellido}?`
@@ -187,7 +191,7 @@ function ReservasModal({
             )}
           </div>
 
-          {/* BUSCADOR */}
+          {/* BUSCADOR DE CLIENTES */}
           <div className="w-[260px]">
             <label className="block text-xs font-semibold mb-1 text-gray-600">
               Buscar cliente:
@@ -256,7 +260,7 @@ function ReservasModal({
 
         <div className="overflow-x-auto">
           <div className="min-w-[900px]">
-            {/* COLUMNAS */}
+            {/* COLUMNAS DE RESERVAS */}
             <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1.2fr_1fr_0.5fr] gap-2 text-xs font-semibold border-b pb-2 mb-2">
               <div className="flex items-center gap-1">
                 👤 <span>Cliente</span>
@@ -289,7 +293,7 @@ function ReservasModal({
                 ☎️ <span>Teléfono</span>
               </div>
 
-              {/* PAGOS */}
+              {/* PAGOS DE RESERVA */}
               <div
                 onClick={() => cambiarOrden("pago")}
                 className="flex items-center gap-1 cursor-pointer select-none"
@@ -461,13 +465,7 @@ function ReservasModal({
                           <button
                             onMouseEnter={() => setHoverPagoId(r.id)}
                             onMouseLeave={() => setHoverPagoId(null)}
-                            onClick={() => {
-                              if (r.estadoPago === "PENDIENTE") {
-                                marcarSenia(r);
-                              } else if (r.estadoPago === "SENIA_PAGADA") {
-                                marcarPago(r);
-                              }
-                            }}
+                            onClick={() => setPagoPendiente(r)}
                             className={`
         px-2 py-1 rounded text-white transition
         ${r.estadoPago === "PENDIENTE" ? "bg-gray-500 hover:bg-orange-600" : ""}
@@ -499,13 +497,7 @@ function ReservasModal({
                         {estado !== "FINALIZADA" && (
                           <button
                             type="button"
-                            onClick={async () => {
-                              const ok = await eliminarReserva(r.id);
-
-                              if (ok) {
-                                enviarCancelacionWhatsApp(r);
-                              }
-                            }}
+                            onClick={() => setReservaAEliminar(r)}
                             className="px-3 py-1 text-xs bg-red-600 text-white rounded"
                           >
                             X

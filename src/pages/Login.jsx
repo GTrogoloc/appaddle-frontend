@@ -23,26 +23,23 @@ function Login() {
     const data = await response.json();
 
     localStorage.setItem("token", data.data.token);
-    localStorage.setItem(
-      "admin",
-      JSON.stringify(data.data.administrador)
-    );
+    localStorage.setItem("admin", JSON.stringify(data.data.administrador));
 
     navigate("/dashboard");
   };
 
   return (
     <div className="relative min-h-screen flex">
-
       {/* LOGIN */}
-      <div className="
+      <div
+        className="
          relative z-10
          flex w-full items-center justify-center
          bg-transparent md:bg-white
          md:w-1/2
         
-      ">
-        
+      "
+      >
         <form
           onSubmit={handleSubmit}
           className="
@@ -54,7 +51,6 @@ function Login() {
             md:shadow-none
           "
         >
-
           <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
             Iniciar sesión
           </h2>
@@ -135,7 +131,6 @@ function Login() {
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur"></div>
       </div>
-
     </div>
   );
 }

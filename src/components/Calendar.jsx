@@ -3,7 +3,6 @@ import "react-day-picker/dist/style.css";
 import { useState } from "react";
 import { es } from "date-fns/locale";
 
-
 function Calendar({ onSelectDates }) {
   const [selectedDays, setSelectedDays] = useState([]);
 
@@ -14,9 +13,7 @@ function Calendar({ onSelectDates }) {
       return;
     }
 
-    const ordenadas = [...days].sort(
-      (a, b) => a.getTime() - b.getTime()
-    );
+    const ordenadas = [...days].sort((a, b) => a.getTime() - b.getTime());
 
     setSelectedDays(ordenadas);
     onSelectDates(ordenadas);
@@ -35,17 +32,14 @@ function Calendar({ onSelectDates }) {
           caption_label: "text-lg font-semibold capitalize",
           nav_button:
             "h-8 w-8 rounded-full hover:bg-gray-100 flex items-center justify-center",
-          head_cell:
-            "text-sm font-medium text-gray-500",
+          head_cell: "text-sm font-medium text-gray-500",
           day: `
             rounded-full
             hover:bg-green-100
             transition
           `,
-          day_selected:
-            "bg-red-600 text-white hover:bg-red-700",
-          day_today:
-            "border border-red-500 font-semibold",
+          day_selected: "bg-red-600 text-white hover:bg-red-700",
+          day_today: "border border-red-500 font-semibold",
           day_disabled: "text-gray-300",
         }}
       />

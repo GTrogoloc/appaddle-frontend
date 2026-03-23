@@ -8,7 +8,6 @@ function PanelCalendario({
   return (
     <div className="dashboard-left">
       <div className="max-w-md mx-auto mt-4">
-
         {/* TÍTULO */}
         <div className="w-full mb-4 flex justify-center md:justify-start">
           <span className="inline-block bg-[#7a1f2b] text-white px-20 py-1 rounded-md text-sm font-semibold">
@@ -27,30 +26,29 @@ function PanelCalendario({
             onClick={() => setMostrarReservas(true)}
             className="w-full px-4 py-2 text-sm bg-[#7a1f2b] hover:bg-[#5e1821] text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
-           📅 Ver reservas
+            📅 Ver reservas
           </button>
         </div>
 
         {/* BOTÓN ESTADÍSTICAS */}
-<div className="mt-2">
-  <button
-    onClick={() => setMostrarEstadisticas(true)}
-    className="w-full px-4 py-2 text-sm bg-blue-700 hover:bg-blue-800 text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
-  >
-    📊 Estadísticas
-  </button>
-</div>
+        <div className="mt-2">
+          <button
+            onClick={() => setMostrarEstadisticas(true)}
+            className="w-full px-4 py-2 text-sm bg-blue-700 hover:bg-blue-800 text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
+          >
+            📊 Estadísticas
+          </button>
+        </div>
 
-{/* BOTÓN TORNEOS (DESACTIVADO VISUALMENTE) */}
-<div className="mt-2">
-  <button
-    className="w-full px-4 py-2 text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2 cursor-not-allowed"
-    title="Disponible próximamente"
-  >
-    🏆 Torneos            🔒
-  </button>
-</div>
-
+        {/* BOTÓN TORNEOS (DESACTIVADO VISUALMENTE) */}
+        <div className="mt-2">
+          <button
+            className="w-full px-4 py-2 text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2 cursor-not-allowed"
+            title="Disponible próximamente"
+          >
+            🏆 Torneos 🔒
+          </button>
+        </div>
       </div>
     </div>
   );
