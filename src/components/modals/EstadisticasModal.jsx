@@ -7,6 +7,7 @@ function EstadisticasModal({
 }) {
   const [seccionActiva, setSeccionActiva] = useState("clientes");
   const [subSeccionClientes, setSubSeccionClientes] = useState("activos");
+  const [subSeccionIngresos, setSubSeccionIngresos] = useState(null);
 
   //TOP 5 CLIENTES MÁS ACTIVOS (ÚLTIMOS 3 MESES)
   const obtenerTopClientes = () => {
@@ -732,7 +733,7 @@ function EstadisticasModal({
             </div>
           )}
 
-          {seccionActiva === "ingresos" && (
+          {seccionActiva === "ingresos" && !subSeccionIngresos && (
             <div className="space-y-4 text-sm">
               {/* PENDIENTE */}
               <div className="bg-red-50 p-4 rounded-md border border-red-200">
@@ -753,10 +754,11 @@ function EstadisticasModal({
                     <> 👥 {turnosConSenia} clientes con seña</>
                   )}
                 </p>
+
                 {/**boton VER DEUDORES**/}
                 {deudores.length > 0 && (
                   <button
-                    onClick={() => setSeccionActiva("deudores")}
+                    onClick={() => setSubSeccionIngresos("deudores")}
                     className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-xs"
                   >
                     Ver deudores ({deudores.length})
@@ -828,50 +830,51 @@ function EstadisticasModal({
               </div>
             </div>
           )}
-          {seccionActiva === "deudores" && (
-            <div className="space-y-2 text-sm">
-              {/* BOTÓN VOLVER */}
-              <button
-                onClick={() => setSeccionActiva("ingresos")}
-                className="mb-2 px-3 py-1 bg-gray-400 text-white rounded text-xs"
-              >
-                ← Volver atras
-              </button>
-              <h4 className="font-semibold mb-2">💸 Deudores</h4>
+          {seccionActiva === "ingresos" &&
+            subSeccionIngresos === "deudores" && (
+              <div className="space-y-2 text-sm">
+                <button
+                  onClick={() => setSubSeccionIngresos(null)}
+                  className="mb-2 px-3 py-1 bg-gray-400 text-white rounded text-xs"
+                >
+                  ← Volver atras
+                </button>
 
-              {deudores.length === 0 ? (
-                <p className="text-gray-500 text-xs">No hay deudas</p>
-              ) : (
-                deudores.map((r) => {
-                  const fecha = new Date(r.fechaHoraInicio);
-                  const dia = fecha.toLocaleDateString("es-AR");
+                <h4 className="font-semibold mb-2">💸 Deudores</h4>
 
-                  return (
-                    <div
-                      key={r.id}
-                      className="flex justify-between border-b pb-1"
-                    >
-                      <span>
-                        {dia} - {r.nombre} {r.apellido}
-                      </span>
+                {deudores.length === 0 ? (
+                  <p className="text-gray-500 text-xs">No hay deudas</p>
+                ) : (
+                  deudores.map((r) => {
+                    const fecha = new Date(r.fechaHoraInicio);
+                    const dia = fecha.toLocaleDateString("es-AR");
 
-                      <span
-                        className={`text-xs font-semibold ${
-                          r.estadoPago === "PENDIENTE"
-                            ? "text-red-600"
-                            : "text-orange-600"
-                        }`}
+                    return (
+                      <div
+                        key={r.id}
+                        className="flex justify-between border-b pb-1"
                       >
-                        {r.estadoPago === "PENDIENTE"
-                          ? "Debe completo"
-                          : "Señó (falta pagar)"}
-                      </span>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          )}
+                        <span>
+                          {dia} - {r.nombre} {r.apellido}
+                        </span>
+
+                        <span
+                          className={`text-xs font-semibold ${
+                            r.estadoPago === "PENDIENTE"
+                              ? "text-red-600"
+                              : "text-orange-600"
+                          }`}
+                        >
+                          {r.estadoPago === "PENDIENTE"
+                            ? "Debe completo"
+                            : "Señó (falta pagar)"}
+                        </span>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
         </div>
       </div>
     </div>
