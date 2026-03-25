@@ -108,7 +108,7 @@ function ReservasModal({
       <div className="bg-white w-[95%] max-w-4xl rounded-lg p-4 max-h-[80vh] flex flex-col">
         {/* HEADER */}
         <div className="flex justify-between items-center mb-3">
-          <h3 className="font-semibold text-lg">Reservas</h3>
+          <h3 className="font-semibold text-lg">📅 Reservas</h3>
           <button
             onClick={() => setMostrarReservas(false)}
             className="text-red-600 font-bold text-lg"
@@ -122,7 +122,7 @@ function ReservasModal({
           <span className="font-medium text-gray-600">⏱️ Próximos turnos:</span>
 
           {proximosTurnos?.length === 0 && (
-            <span className="italic text-gray-400">sin turnos próximos</span>
+            <span className="italic text-gray-400">Sin turnos próximos</span>
           )}
 
           {proximosTurnos?.map((r, index) => {
