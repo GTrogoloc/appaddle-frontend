@@ -14,9 +14,9 @@ function HorariosCancha({
 
   const diaKey = keyDia(diaActivo);
   const seleccionados = selecciones[diaKey]?.[cancha] || [];
-
+  console.log(HORARIOS);
   return (
-    <div className="grid grid-cols-11 gap-2">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(50px,1fr))] gap-2">
       {HORARIOS.map((hora) => {
         const finalizado = turnoFinalizado(hora);
         const ocupado = estaOcupado(cancha, hora);
@@ -35,9 +35,10 @@ function HorariosCancha({
                 toggleHorario(cancha, hora);
               }}
               style={{
-                padding: "5px 11px",
+                padding: "4px 8px",
                 minWidth: "50px",
                 borderRadius: "2px",
+                fontWeight: "500",
                 border: "none",
                 cursor: "pointer",
                 background: ocupado
@@ -57,7 +58,7 @@ function HorariosCancha({
               <span
                 style={{
                   position: "absolute",
-                  top: "-28px",
+                  top: "30px",
                   left: "50%",
                   transform: "translateX(-50%)",
                   background: "#333",
@@ -71,9 +72,9 @@ function HorariosCancha({
                 }}
               >
                 {ocupado
-                  ? "Reservado"
+                  ? "Ocupado"
                   : finalizado
-                  ? "Horario finalizado"
+                  ? "No Disponible"
                   : "Disponible"}
               </span>
             )}

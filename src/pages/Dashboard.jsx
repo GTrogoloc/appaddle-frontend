@@ -11,21 +11,21 @@ import PanelCalendario from "../components/reserva/PanelCalendario";
 import EstadisticasModal from "../components/modals/EstadisticasModal";
 import { obtenerReservas } from "../services/reservaService";
 
-const HORARIOS = [
-  "08:00",
-  "09:30",
-  "11:00",
-  "12:30",
-  "14:00",
-  "15:30",
-  "17:00",
-  "18:30",
-  "20:00",
-  "21:30",
-  "23:00",
-];
-
 function Dashboard() {
+  const HORARIOS = [
+    "06:30",
+    "08:00",
+    "09:30",
+    "11:00",
+    "12:30",
+    "14:00",
+    "15:30",
+    "17:00",
+    "18:30",
+    "20:00",
+    "21:30",
+    "23:00",
+  ];
   // ======================
   // ESTADOS
   // ======================
