@@ -107,19 +107,25 @@ function EstadisticasModal({
     const clientes = {};
 
     reservasValidas.forEach((r) => {
-      const telefono = r.telefono;
+      const clave = `${r.nombre}-${r.apellido}`.toLowerCase().trim();
       const fecha = new Date(r.fechaHoraInicio);
 
-      if (!clientes[telefono]) {
-        clientes[telefono] = {
+      if (!clientes[clave]) {
+        clientes[clave] = {
           nombre: r.nombre,
           apellido: r.apellido,
           telefono: r.telefono,
           primeraReserva: fecha,
+          ultimaFecha: fecha,
         };
       } else {
-        if (fecha < clientes[telefono].primeraReserva) {
-          clientes[telefono].primeraReserva = fecha;
+        if (fecha < clientes[clave].primeraReserva) {
+          clientes[clave].primeraReserva = fecha;
+        }
+
+        if (fecha > clientes[clave].ultimaFecha) {
+          clientes[clave].telefono = r.telefono;
+          clientes[clave].ultimaFecha = fecha;
         }
       }
     });

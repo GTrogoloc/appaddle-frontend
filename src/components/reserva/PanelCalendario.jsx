@@ -24,9 +24,9 @@ function PanelCalendario({
         <div className="mt-4">
           <button
             onClick={() => setMostrarReservas(true)}
-            className="w-full px-4 py-2 text-sm bg-[#7a1f2b] hover:bg-[#5e1821] text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            className="w-full px-6 py-3 text-base font-semibold tracking-wide bg-[#7a1f2b] hover:bg-[#5e1821] text-white rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
-            📅 Ver reservas
+            📅 MIS RESERVAS
           </button>
         </div>
 
@@ -34,16 +34,16 @@ function PanelCalendario({
         <div className="mt-2">
           <button
             onClick={() => setMostrarEstadisticas(true)}
-            className="w-full px-4 py-2 text-sm bg-blue-700 hover:bg-blue-800 text-white rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            className="w-full px-6 py-3 text-base font-semibold tracking-wide bg-blue-700 hover:bg-blue-800 text-white rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
-            📊 Estadísticas
+            📊 ESTADÍSTICAS
           </button>
         </div>
 
         {/* BOTÓN TORNEOS (DESACTIVADO VISUALMENTE) */}
         <div className="mt-2">
           <button
-            className="w-full px-4 py-2 text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 rounded shadow transition transform hover:scale-[1.02] flex items-center justify-center gap-2 cursor-not-allowed"
+            className="w-full px-6 py-3 text-base font-semibold tracking-wide bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg shadow-md transition transform hover:scale-[1.02] flex items-center justify-center gap-2 cursor-not-allowed"
             title="Disponible próximamente"
           >
             🏆 Torneos 🔒
