@@ -116,7 +116,7 @@ function ResumenReserva({
             {/* Título + contador */}
             <div className="mb-3">
               <h3 className="font-semibold text-base flex items-center">
-                🎾 Resumen de la reserva
+                🎾 RESUMEN DE LA RESERVA
               </h3>
 
               <p className="text-xs text-gray-600">

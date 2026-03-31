@@ -37,9 +37,19 @@ function Login() {
          flex w-full items-center justify-center
          bg-transparent md:bg-white
          md:w-1/2
+    
         
       "
       >
+        <div className="absolute top-20 left-3 w-full text-center z-20">
+          <h1 className="text-5xl font-bold text-white md:text-[#7a1f2b] tracking-wide">
+            PADEL RESERVA<span className="text-lg align-[0.4em] ml-1">™</span>
+          </h1>
+          <p className="text-sm text-gray-200 mt-1 md:text-gray-500">
+            Sistema de gestión de reservas
+          </p>
+        </div>
+
         <form
           onSubmit={handleSubmit}
           className="
@@ -49,6 +59,7 @@ function Login() {
             p-6
             shadow-xl
             md:shadow-none
+            translate-x-2 md:translate-x-0
           "
         >
           <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
@@ -63,12 +74,14 @@ function Login() {
               type="text"
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
+              autoFocus
               className="
                 mt-1 w-full rounded-md
                 border border-gray-300
                 px-3 py-2
                 focus:outline-none
-                focus:ring-2 focus:ring-red-600
+                focus:border-[#7a1f2b]
+                focus:ring-1 focus:ring-[#7a1f2b]/40
               "
               required
             />
@@ -87,7 +100,8 @@ function Login() {
                 border border-gray-300
                 px-3 py-2
                 focus:outline-none
-                focus:ring-2 focus:ring-red-600
+                focus:border-[#7a1f2b]
+                focus:ring-1 focus:ring-[#7a1f2b]/40
               "
               required
             />
@@ -130,6 +144,12 @@ function Login() {
         style={{ backgroundImage: "url('/Cancha.JPG')" }}
       >
         <div className="absolute inset-0 bg-black/40 backdrop-blur"></div>
+      </div>
+      <div className="absolute bottom-4 w-full text-center z-20">
+        <p className="text-[11px] text-gray-300 md:text-gray-400">
+          © {new Date().getFullYear()} Padel Reserva - Todos los derechos
+          reservados
+        </p>
       </div>
     </div>
   );

@@ -126,7 +126,7 @@ function Header({ cargarCanchas, canchas }) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center w-[90%] max-w-sm">
             <p className="mb-4 font-semibold text-lg">
-              ¿Seguro que querés cerrar sesión?
+              ¿Seguro desea cerrar sesión?
             </p>
 
             <div className="flex gap-3 justify-center">
