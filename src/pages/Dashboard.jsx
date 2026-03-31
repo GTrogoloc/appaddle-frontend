@@ -38,6 +38,7 @@ function Dashboard() {
   const [mostrarCalendarioFiltro, setMostrarCalendarioFiltro] = useState(false);
   const [mostrarCanceladas, setMostrarCanceladas] = useState(false);
   const [tooltipHora, setTooltipHora] = useState(null);
+
   const {
     reservas,
     setReservas,
@@ -45,6 +46,9 @@ function Dashboard() {
     confirmarReserva,
     DURACION_TURNO_MINUTOS,
   } = useReservas();
+
+  console.log("RESERVAS:", reservas);
+
   const { estaOcupado, turnoFinalizado, obtenerEstadoTurno, proximosTurnos } =
     useEstadoTurnos({ reservas, diaActivo, DURACION_TURNO_MINUTOS });
   const {
