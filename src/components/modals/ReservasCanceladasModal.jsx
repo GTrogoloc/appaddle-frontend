@@ -13,9 +13,14 @@ function ReservasCanceladasModal({
       <div className="bg-white w-[95%] max-w-5xl rounded-lg p-4 max-h-[80vh] flex flex-col">
         {/* HEADER */}
         <div className="flex justify-between items-center mb-3">
-          <h3 className="font-semibold text-lg text-red-600">
-            Reservas Canceladas ❌
-          </h3>
+          <div>
+            <h3 className="font-semibold text-lg text-red-600">
+              Reservas Canceladas ❌
+            </h3>
+            <p className="text-xs text-gray-500 mt-1">
+              Se muestran únicamente cancelaciones del mes actual y anterior.
+            </p>
+          </div>
           <button
             onClick={() => setMostrarCanceladas(false)}
             className="text-red-600 font-bold text-lg"
@@ -40,7 +45,29 @@ function ReservasCanceladasModal({
             {/* LISTA */}
             <div className="flex-1 overflow-y-auto pr-1">
               {reservas
-                .filter((r) => r.estado === "CANCELADA")
+                .filter((r) => {
+                  if (r.estado !== "CANCELADA") return false;
+
+                  const fechaCancelacion = new Date(r.fechaCancelacion);
+
+                  const ahora = new Date();
+
+                  const mesActual = ahora.getMonth();
+                  const anioActual = ahora.getFullYear();
+
+                  const mesAnterior = mesActual === 0 ? 11 : mesActual - 1;
+                  const anioMesAnterior =
+                    mesActual === 0 ? anioActual - 1 : anioActual;
+
+                  const mesReserva = fechaCancelacion.getMonth();
+                  const anioReserva = fechaCancelacion.getFullYear();
+
+                  return (
+                    (mesReserva === mesActual && anioReserva === anioActual) ||
+                    (mesReserva === mesAnterior &&
+                      anioReserva === anioMesAnterior)
+                  );
+                })
                 .sort(
                   (a, b) =>
                     new Date(b.fechaCancelacion) - new Date(a.fechaCancelacion)
@@ -83,7 +110,27 @@ function ReservasCanceladasModal({
           </div>
         </div>
 
-        {reservas.filter((r) => r.estado === "CANCELADA").length === 0 && (
+        {reservas.filter((r) => {
+          if (r.estado !== "CANCELADA") return false;
+
+          const fechaCancelacion = new Date(r.fechaCancelacion);
+
+          const ahora = new Date();
+
+          const mesActual = ahora.getMonth();
+          const anioActual = ahora.getFullYear();
+
+          const mesAnterior = mesActual === 0 ? 11 : mesActual - 1;
+          const anioMesAnterior = mesActual === 0 ? anioActual - 1 : anioActual;
+
+          const mesReserva = fechaCancelacion.getMonth();
+          const anioReserva = fechaCancelacion.getFullYear();
+
+          return (
+            (mesReserva === mesActual && anioReserva === anioActual) ||
+            (mesReserva === mesAnterior && anioReserva === anioMesAnterior)
+          );
+        }).length === 0 && (
           <p className="text-center text-gray-500 mt-4">
             No hay reservas canceladas
           </p>

@@ -920,9 +920,21 @@ TU_ALIAS`;
                           className="flex items-center justify-between border-b pb-2"
                         >
                           {/* IZQUIERDA */}
-                          <span>
-                            {dia} - {r.nombre} {r.apellido}
-                          </span>
+                          <div className="flex flex-col">
+                            <span className="font-medium">
+                              {r.nombre} {r.apellido}
+                            </span>
+
+                            <span className="text-xs text-gray-500">
+                              {dia} -{" "}
+                              {fecha.toLocaleTimeString("es-AR", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              })}{" "}
+                              hs - {r.cancha?.nombre}
+                            </span>
+                          </div>
 
                           {/* DERECHA */}
                           <div className="flex items-center gap-2">
