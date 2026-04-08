@@ -43,7 +43,7 @@ function Login() {
       >
         <div className="absolute top-20 left-3 w-full text-center z-20">
           <h1 className="text-5xl font-bold text-white md:text-[#7a1f2b] tracking-wide">
-            PADEL RESERVA<span className="text-lg align-[0.4em] ml-1">™</span>
+            RESERVA PADEL<span className="text-lg align-[0.4em] ml-1">™</span>
           </h1>
           <p className="text-sm text-gray-200 mt-1 md:text-gray-500">
             Sistema de gestión de reservas
@@ -63,7 +63,7 @@ function Login() {
           "
         >
           <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-            Iniciar sesión
+            ¡Bienvenidos!
           </h2>
 
           <div className="mb-4">
@@ -147,7 +147,7 @@ function Login() {
       </div>
       <div className="absolute bottom-4 w-full text-center z-20">
         <p className="text-[11px] text-gray-300 md:text-gray-400">
-          © {new Date().getFullYear()} Padel Reserva - Todos los derechos
+          © {new Date().getFullYear()} Reserva Padel - Todos los derechos
           reservados
         </p>
       </div>

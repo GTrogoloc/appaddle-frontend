@@ -57,7 +57,7 @@ function EstadisticasModal({
 
   const topClientes = obtenerTopClientes();
 
-  // 😴 CLIENTES INACTIVOS (SIN RESERVAS EN EL ULTIMO MES)
+  // CLIENTES INACTIVOS (SIN RESERVAS EN EL ULTIMO MES)
   const obtenerClientesInactivos = () => {
     if (!reservas || reservas.length === 0) return [];
 
@@ -94,7 +94,7 @@ function EstadisticasModal({
 
   const clientesInactivos = obtenerClientesInactivos();
 
-  // 🆕 NUEVOS CLIENTES (ÚLTIMOS 14 DÍAS)
+  // NUEVOS CLIENTES (ÚLTIMOS 14 DÍAS)
   const obtenerNuevosClientes = () => {
     if (!reservas || reservas.length === 0) return [];
 
@@ -163,18 +163,18 @@ function EstadisticasModal({
   // reservas válidas
   const reservasValidas = reservas.filter((r) => r.estado !== "CANCELADA");
 
-  // 📊 RESERVAS HOY
+  // RESERVAS HOY
   const reservasHoy = reservasValidas.filter(
     (r) => r.fechaHoraInicio?.slice(0, 10) === hoy
   );
 
-  // 📅 MES ACTUAL
+  // MES ACTUAL
   const reservasMesActual = reservasValidas.filter((r) => {
     const fecha = new Date(r.fechaHoraInicio);
     return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
   });
 
-  // 📅 MES ANTERIOR
+  // MES ANTERIOR
   const reservasMesAnterior = reservasValidas.filter((r) => {
     const fecha = new Date(r.fechaHoraInicio);
     return (
@@ -183,12 +183,12 @@ function EstadisticasModal({
     );
   });
 
-  // ❌ CANCELADAS HOY
+  // CANCELADAS HOY
   const canceladasHoy = reservas.filter(
     (r) => r.estado === "CANCELADA" && r.fechaHoraInicio?.slice(0, 10) === hoy
   ).length;
 
-  // ❌ CANCELADAS MES ACTUAL
+  // CANCELADAS MES ACTUAL
   const canceladasMesActual = reservas.filter((r) => {
     if (r.estado !== "CANCELADA") return false;
 
@@ -196,7 +196,7 @@ function EstadisticasModal({
     return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
   }).length;
 
-  // ❌ CANCELADAS MES ANTERIOR
+  // CANCELADAS MES ANTERIOR
   const canceladasMesAnterior = reservas.filter((r) => {
     if (r.estado !== "CANCELADA") return false;
 
@@ -284,7 +284,7 @@ function EstadisticasModal({
     (r) => r.estadoPago === "SENIA_PAGADA"
   ).length;
 
-  // 📅 INGRESOS MES ACTUAL
+  // INGRESOS MES ACTUAL
   const ingresosMesActual = reservasMesActual.reduce((total, r) => {
     if (r.estadoPago === "PAGADO") {
       return total + (r.precioTotal || 0);
@@ -295,7 +295,7 @@ function EstadisticasModal({
     return total;
   }, 0);
 
-  // 📅 INGRESOS MES ANTERIOR
+  // INGRESOS MES ANTERIOR
   const ingresosMesAnterior = reservasMesAnterior.reduce((total, r) => {
     if (r.estadoPago === "PAGADO") {
       return total + (r.precioTotal || 0);
@@ -306,7 +306,7 @@ function EstadisticasModal({
     return total;
   }, 0);
 
-  // 💸 INGRESOS DE CANCELADAS
+  // INGRESOS DE CANCELADAS
   const calcularIngresosCanceladas = (lista) => {
     return lista.reduce((total, r) => {
       if (r.estado !== "CANCELADA") return total;
@@ -332,7 +332,7 @@ function EstadisticasModal({
   const ingresosCanceladasMesAnterior =
     calcularIngresosCanceladas(reservasMesAnterior);
 
-  // 📊 PORCENTAJES
+  // PORCENTAJES
   const porcentajeCancelacionesHoy =
     ingresosHoy > 0
       ? Math.round((ingresosCanceladasHoy / ingresosHoy) * 100)
@@ -507,7 +507,7 @@ function EstadisticasModal({
 
                 {/* CONTENIDO TEMPORAL */}
                 <div className="bg-gray-50 p-4 rounded-md border space-y-6">
-                  {/* 🏆 CLIENTES ACTIVOS */}
+                  {/* CLIENTES ACTIVOS */}
                   {subSeccionClientes === "activos" && (
                     <>
                       <h4 className="font-semibold text-lg mb-1">
@@ -571,7 +571,7 @@ function EstadisticasModal({
                     </>
                   )}
 
-                  {/* 😴 CLIENTES INACTIVOS */}
+                  {/* CLIENTES INACTIVOS */}
                   {subSeccionClientes === "inactivos" && (
                     <>
                       <h4 className="font-semibold text-lg mb-2">
@@ -633,7 +633,7 @@ function EstadisticasModal({
                     </>
                   )}
 
-                  {/* 🆕 NUEVOS CLIENTES */}
+                  {/* NUEVOS CLIENTES */}
                   {subSeccionClientes === "nuevos" && (
                     <>
                       <h4 className="font-semibold text-lg mb-2">
@@ -972,7 +972,7 @@ TU_ALIAS`;
                   )}
                 </div>
               )}
-            {/* 🔥 MODAL CONFIRMAR PAGO */}
+            {/* MODAL CONFIRMAR PAGO */}
             {pagoAConfirmar && (
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg text-center w-[90%] max-w-sm">

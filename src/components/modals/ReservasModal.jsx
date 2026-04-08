@@ -240,7 +240,7 @@ function ReservasModal({
             <button
               onClick={() => setMostrarCanceladas(true)}
               className="w-[110px] px-3 py-[3px] text-[15px] leading-none
-   bg-gray-700 text-white rounded-sm shadow-sm hover:bg-gray-800 transition"
+             bg-gray-700 text-white rounded-sm shadow-sm hover:bg-gray-800 transition"
             >
               Canceladas
             </button>

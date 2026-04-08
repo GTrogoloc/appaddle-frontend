@@ -29,7 +29,7 @@ export function formatearFecha(fecha, conHora = false) {
     ? d.toLocaleTimeString("es-AR", {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: false, // 🔥 CLAVE
+        hour12: false,
       }) + " hs"
     : d.toLocaleDateString("es-AR");
 }

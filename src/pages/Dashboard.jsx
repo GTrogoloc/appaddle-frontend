@@ -179,7 +179,7 @@ function Dashboard() {
       };
 
       if (nuevos.length === 0) {
-        // 🧹 si no quedan horarios, eliminar la cancha
+        //  si no quedan horarios, eliminar la cancha
         delete nuevasCanchas[cancha];
       } else {
         nuevasCanchas[cancha] = nuevos;
@@ -190,7 +190,7 @@ function Dashboard() {
         [diaKey]: nuevasCanchas,
       };
 
-      // 🧹 si el día queda vacío, eliminar el día
+      //  si el día queda vacío, eliminar el día
       if (Object.keys(nuevasCanchas).length === 0) {
         delete nuevasSelecciones[diaKey];
       }
@@ -409,7 +409,7 @@ function Dashboard() {
         }}
       >
         {/*====================== MARCA DE AGUA ======================*/}
-        <div className="fixed bottom-4 right-4 bg-black/80 text-white text-xs px-4 py-1.5 rounded-full shadow-lg font-semibold tracking-wide hover:bg-black transition-colors duration-200">
+        <div className="fixed bottom-2 right-4 bg-black/80 text-white text-xs px-2 py-1.5 rounded-full shadow-lg font-semibold tracking-wide hover:bg-black transition-colors duration-200">
           © 2026 PCG Developer
         </div>
 
@@ -469,7 +469,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* 🔥 MODAL CANCELAR RESERVA */}
+      {/* MODAL CANCELAR RESERVA */}
       {reservaAEliminar && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -505,7 +505,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* 🔥 MODAL PAGOS */}
+      {/* MODAL PAGOS */}
       {pagoPendiente && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -542,11 +542,9 @@ function Dashboard() {
                     );
                   }
 
-                  // 🔥 NUEVO
                   const data = await obtenerReservas(token);
                   setReservas(data);
 
-                  // cerrar modal
                   setPagoPendiente(null);
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded"

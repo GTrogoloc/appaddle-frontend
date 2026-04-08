@@ -19,7 +19,7 @@ export async function login(usuario, contraseña) {
 
   const data = await response.json();
 
-  // 🔐 Guardamos sesión
+  // Guardamos sesión
   localStorage.setItem("token", data.data.token);
   localStorage.setItem("admin", JSON.stringify(data.data.administrador));
 
