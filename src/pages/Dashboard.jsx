@@ -326,16 +326,29 @@ function Dashboard() {
     setMostrarConfirmacion(true);
   }
 
+  function capitalizarTexto(texto) {
+    return texto
+      .trim()
+      .toLowerCase()
+      .replace(/\b\w/g, (letra) => letra.toUpperCase());
+  }
+
   async function confirmarReservaFinal() {
+    const clienteNormalizado = {
+      ...cliente,
+      nombre: capitalizarTexto(cliente.nombre),
+      apellido: capitalizarTexto(cliente.apellido),
+    };
+
     const ok = await confirmarReserva({
-      cliente,
+      cliente: clienteNormalizado,
       selecciones,
       CANCHAS_MAP,
     });
 
     if (!ok) return;
 
-    enviarConfirmacionWhatsApp(cliente, selecciones);
+    enviarConfirmacionWhatsApp(clienteNormalizado, selecciones);
 
     setMostrarConfirmacion(false);
     setSelecciones({});

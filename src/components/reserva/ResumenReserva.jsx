@@ -147,7 +147,7 @@ function ResumenReserva({
                 <input
                   name="nombre"
                   autoComplete="off"
-                  placeholder="Nombre"
+                  placeholder="Nombre del cliente.."
                   value={cliente.nombre}
                   onChange={(e) => {
                     handleClienteChange(e);
@@ -158,6 +158,12 @@ function ResumenReserva({
                     if (sugerencias.length > 0) {
                       setMostrarSugerencias(true);
                     }
+                  }}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      setMostrarSugerencias(false);
+                      setIndiceActivo(-1);
+                    }, 150);
                   }}
                   onKeyDown={handleKeyDown}
                   className="w-full border rounded px-2 py-1"
@@ -205,7 +211,7 @@ function ResumenReserva({
 
               <input
                 name="apellido"
-                placeholder="Apellido"
+                placeholder="Apellido del cliente.."
                 value={cliente.apellido}
                 onChange={handleClienteChange}
                 className="w-full border rounded px-2 py-1"
@@ -213,7 +219,7 @@ function ResumenReserva({
 
               <input
                 name="telefono"
-                placeholder="Teléfono"
+                placeholder="Teléfono del cliente.."
                 value={cliente.telefono}
                 onChange={handleClienteChange}
                 className="w-full border rounded px-2 py-1"
