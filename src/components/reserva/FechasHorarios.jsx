@@ -47,7 +47,7 @@ function FechasHorarios({
                 cursor: "pointer",
                 fontWeight: "500",
                 background:
-                  diaActivo?.getTime() === dia.getTime() ? "#e53935" : "#eee",
+                  diaActivo?.getTime() === dia.getTime() ? "#8b5cf6" : "#eee",
                 color: diaActivo?.getTime() === dia.getTime() ? "#fff" : "#000",
               }}
             >

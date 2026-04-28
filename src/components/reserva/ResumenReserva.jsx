@@ -19,7 +19,7 @@ function ResumenReserva({
       .map(([fecha, canchas]) => (
         <div
           key={fecha}
-          className="mb-2 p-2 rounded-md border border-gray-200 bg-white/60"
+          className="mb-2 p-2 rounded-md border border-gray-200 bg-violet-300/50"
         >
           {/* FECHA */}
           <div className="font-semibold text-sm mb-2 flex items-center gap-2">
@@ -45,7 +45,7 @@ function ResumenReserva({
                     .map((hora) => (
                       <div
                         key={hora}
-                        className="flex items-center bg-red-100 text-red-800 px-2 py-[2px] rounded text-xs"
+                        className="flex items-center bg-gray-100 text-red-800 px-2 py-[2px] rounded text-xs"
                       >
                         {hora}
                         <button
